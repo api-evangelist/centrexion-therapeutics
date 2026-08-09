@@ -1,0 +1,135 @@
+generated: '2026-08-09'
+method: derived
+source: openapi/centrexion-therapeutics-content-openapi.yml + live responses observed 2026-08-09
+note: >-
+  Cross-cutting request/response semantics for the Centrexion Therapeutics content API. Centrexion
+  publishes no API documentation, so nothing here is quoted from a docs page — every statement is
+  derived from the published WordPress route index or from a live anonymous response captured on
+  2026-08-09. The contract is WordPress core's, not a Centrexion design choice; where this
+  deployment deviates from stock WordPress behaviour it is called out explicitly.
+authentication:
+  style: none for the catalogued surface
+  detail: >-
+    Every catalogued operation is anonymous. Application passwords (HTTP Basic) gate the
+    unmodelled write/admin surface. See authentication/centrexion-therapeutics-authentication.yml.
+idempotency:
+  supported: false
+  detail: >-
+    There is no idempotency contract and no idempotency key. The catalogued surface is GET-only, so
+    every catalogued operation is idempotent by HTTP method rather than by any provider mechanism.
+    No Idempotency pointer is emitted in apis.yml, because the provider ships no idempotency
+    facility to point at.
+pagination:
+  style: page-number
+  params:
+    page: 1-based page index, default 1.
+    per_page: items per page, default 10, maximum 100; above 100 returns 400 rest_invalid_param.
+    offset: alternative absolute offset, overrides page when supplied.
+  response_headers:
+    X-WP-Total: total items in the collection
+    X-WP-TotalPages: total pages available
+  link_header: >-
+    RFC 8288 Link header with rel="next" / rel="prev" on paginated collections.
+  cors_exposed: >-
+    Access-Control-Expose-Headers lists X-WP-Total, X-WP-TotalPages and Link, so the pagination
+    headers are readable by browser clients cross-origin.
+  caveat: >-
+    IMPORTANT — on /wp/v2/media the totals are wrong. X-WP-Total reports 43 while the anonymous
+    result set returns fewer items than requested at every page size (0 of 1, 2 of 5, 7 of 10, 26 of
+    100, observed 2026-08-09). About 17 attachments are counted by the header but filtered out of
+    the anonymous response, so X-WP-TotalPages over-reports and a client that trusts it will loop
+    over empty pages. Page to exhaustion and stop on an empty array rather than trusting the
+    headers. The other collections (posts, pages, categories, comments, search) report totals that
+    match what they return.
+field_selection:
+  supported: true
+  param: _fields
+  detail: >-
+    A comma-separated `_fields` query parameter trims the response to the named top-level fields on
+    every collection and singular route. Verified working anonymously. There is no expansion or
+    sparse-fieldset facility beyond this.
+  embedding:
+    param: _embed
+    detail: >-
+      `_embed` inlines linked resources (author, featured media, terms) into an `_embedded` object,
+      following the `_links` relations. Standard WordPress behaviour.
+context:
+  param: context
+  values: [view, embed, edit]
+  default: view
+  detail: >-
+    `context` selects the field set. `edit` requires credentials; anonymously only `view` and
+    `embed` are usable.
+ordering:
+  params:
+    order: asc | desc, default desc
+    orderby: per-collection enum — date, id, title, slug, modified, include, relevance and others
+  detail: Declared per operation in the OpenAPI; the enums are taken verbatim from the route index args.
+filtering:
+  detail: >-
+    Collections accept include/exclude by ID, slug filters, free-text `search` (with
+    `search_columns` on posts/pages), and date-window filters `after`/`before` plus
+    `modified_after`/`modified_before`. Taxonomy filters (categories, tags) exist on posts but are
+    inert here — only the default Uncategorized term is assigned.
+status_filtering:
+  detail: >-
+    `status` defaults to publish and anonymously may only be publish. Any other value returns 400
+    rest_invalid_param rather than an empty set, so a client must not probe for drafts.
+error_envelope:
+  format: wordpress-rest-error
+  rfc9457: false
+  shape: '{"code": string, "message": string, "data": {"status": int, "params"?: object, "details"?: object}}'
+  detail: See errors/centrexion-therapeutics-problem-types.yml for the observed catalogue.
+  guidance: Branch on `code`, never on `message` — messages are localisable.
+request_tracing:
+  supported: false
+  detail: No request-id or correlation-id header is issued on responses.
+rate_limiting:
+  documented: false
+  headers_observed: none
+  detail: >-
+    No RateLimit, X-RateLimit or Retry-After headers were returned on any probe, and no rate-limit
+    policy is published. Absence of a signal is not a guarantee of absence of a limit — WP Engine
+    applies platform-level protections that are not surfaced in headers. robots.txt requests a
+    Crawl-delay of 10 seconds, which is the only published pacing expectation, and is the rate a
+    polite client should honour.
+caching:
+  detail: >-
+    Responses are edge-cached by WP Engine. Observed on /wp/v2/posts: `cache-control: max-age=600,
+    must-revalidate`, `x-cacheable: SHORT`, `x-cache: HIT: 1`, `x-cache-group: normal`. Expect up to
+    ten minutes of staleness. No ETag or Last-Modified header is issued, so conditional requests are
+    not available.
+content_negotiation:
+  response_media_type: application/json; charset=UTF-8
+  detail: >-
+    JSON only on wp/v2. The oEmbed endpoint additionally offers XML via `format=xml`. No alternate
+    representation is negotiated through the Accept header.
+versioning:
+  scheme: uri-path namespace
+  current: wp/v2
+  detail: >-
+    The version is the namespace segment in the path. Ten namespaces are registered; wp/v2 is the
+    content contract. See lifecycle/centrexion-therapeutics-lifecycle.yml.
+crawling_and_indexing:
+  detail: >-
+    API responses carry `x-robots-tag: noindex`. robots.txt disallows only /wp-admin/ (allowing
+    admin-ajax.php), sets Crawl-delay 10, and advertises /sitemap.xml and /sitemap.rss. The
+    /wp-json surface is neither disallowed nor advertised in robots.txt.
+security_headers:
+  detail: >-
+    API responses send `x-content-type-options: nosniff`. The site root sends no HSTS, CSP,
+    X-Frame-Options, Referrer-Policy or Permissions-Policy. See
+    security/centrexion-therapeutics-domain-security.yml.
+personal_data:
+  detail: >-
+    Two catalogued collections return personal data anonymously — /wp/v2/users (2 author records
+    with display name, slug, biography and avatar URLs; no email) and /wp/v2/comments (commenter
+    name, URL and avatar). Both are stock WordPress defaults rather than Centrexion configuration.
+    API Evangelist documents their shape and deliberately reproduces no individual record and ships
+    no Agent Skill that walks them; see skills/_index.yml.
+cross_links:
+  errors: errors/centrexion-therapeutics-problem-types.yml
+  authentication: authentication/centrexion-therapeutics-authentication.yml
+  lifecycle: lifecycle/centrexion-therapeutics-lifecycle.yml
+  data_model: data-model/centrexion-therapeutics-data-model.yml
+  domain_security: security/centrexion-therapeutics-domain-security.yml

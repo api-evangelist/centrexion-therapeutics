@@ -1,0 +1,81 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Centrexion Therapeutics Content API
+  version: 1.0.0
+extends: openapi/centrexion-therapeutics-content-openapi.yml
+x-generated: '2026-08-09'
+x-method: generated
+x-note: >-
+  Records the API Evangelist annotations layered onto the derived contract. The base document is
+  itself a derivation of the WordPress route index Centrexion publishes at /wp-json/ — Centrexion
+  ships no OpenAPI — so this overlay captures the judgement calls made on top of that derivation:
+  the provenance of the surface, the pagination defect on /wp/v2/media, the personal-data flags, and
+  the agent-access posture of each operation. Applying it is not required to use the API; it exists
+  so our enhancements stay separable from the observed contract.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-profile: https://apis.io/provider/centrexion-therapeutics/
+      x-apievangelist-surface-class: incidental-cms
+      x-apievangelist-provider-publishes-spec: false
+      x-apievangelist-developer-program: false
+
+  - target: $.info
+    description: >-
+      Flag that this is a company's marketing-site CMS API rather than a supported product API, so
+      downstream consumers do not read a Kin Score on it as a developer-experience signal.
+    update:
+      x-apievangelist-consumer-warning: >-
+        Centrexion Therapeutics does not market, document or support this API. It is the WordPress
+        REST surface behind centrexion.com, catalogued because it is public and machine-readable.
+        It carries no compatibility promise and can change without notice.
+
+  - target: $.paths['/wp/v2/media'].get
+    description: Record the observed pagination defect so a client does not trust X-WP-Total.
+    update:
+      x-apievangelist-defect:
+        kind: pagination-total-mismatch
+        observed: '2026-08-09'
+        detail: >-
+          X-WP-Total reports 43 while anonymous enumeration returns 0/1, 2/5, 7/10 and 26/100 items
+          by page size. Roughly 17 attachments are counted but filtered from the anonymous result
+          set. Page to exhaustion; stop on an empty array.
+
+  - target: $.paths['/wp/v2/users'].get
+    description: Mark the author collection as personal data and exclude it from agent packaging.
+    update:
+      x-apievangelist-personal-data: true
+      x-apievangelist-agent-excluded: true
+      x-apievangelist-exclusion-reason: >-
+        Returns records about identifiable people anonymously. Documented for completeness; never
+        packaged as an Agent Skill and never reproduced record-by-record.
+
+  - target: $.paths['/wp/v2/comments'].get
+    description: Mark the comment collection as carrying commenter personal data.
+    update:
+      x-apievangelist-personal-data: true
+      x-apievangelist-agent-excluded: true
+      x-apievangelist-exclusion-reason: >-
+        Carries commenter-supplied name, URL and avatar. Only a boilerplate sample comment exists
+        today, but the shape is personal data regardless.
+
+  - target: $.paths['/wp/v2/pages'].get
+    description: Point at the fact that the substantive company content lives here.
+    update:
+      x-apievangelist-primary-collection: true
+      x-apievangelist-note: >-
+        The 6 pages are the entire public corporate site. The pipeline and leadership content is
+        rendered HTML inside content.rendered — there is no structured representation of drug
+        programmes, indications or clinical phases anywhere on this API.
+
+  - target: $.paths['/wp/v2/posts'].get
+    update:
+      x-apievangelist-note: >-
+        Holds only the stock WordPress "Hello world!" placeholder. Not a news archive. A consumer
+        looking for Centrexion press releases will not find them on this API.
+
+  - target: $.components.schemas.Error
+    update:
+      x-apievangelist-note: >-
+        Branch on `code`, never on `message`. Codes are stable WordPress core identifiers; messages
+        are localisable.

@@ -1,18 +1,98 @@
 aid: centrexion-therapeutics
 name: Centrexion Therapeutics
-description: 'Centrexion Therapeutics is a company surfaced via the API Evangelist harvest backlog (source:
-  secondary-market) and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Centrexion Therapeutics is a late clinical-stage biopharmaceutical company headquartered at One
+  Boston Place, Suite 3520, Boston, Massachusetts, developing novel non-opioid, non-addictive
+  therapies for chronic pain alongside an emerging portfolio in immunology and inflammation. The
+  company was founded by Sol Barer, Ph.D. — a founder of Celgene, who chairs the board — and by
+  James N. Campbell, M.D., president and chief scientific officer and Professor Emeritus of
+  neurosurgery at Johns Hopkins University School of Medicine. Jeffrey B. Kindler, formerly chief
+  executive of Pfizer, joined as chief executive officer in 2013. Its lead asset, CNTX-4975, is a
+  highly purified synthetic trans-capsaicin injected directly into the painful joint that produces
+  analgesia by reversibly deactivating the end terminals of TRPV1-expressing primary afferent pain
+  fibers, delivering pain relief that can last months while clearing the body within 24 hours; the
+  FDA granted it Fast Track designation for moderate-to-severe osteoarthritis knee pain. Centrexion
+  runs no developer program and publishes no product API, developer portal, API documentation, SDK
+  or status page. The only machine-readable surface reachable without credentials is the WordPress
+  REST content API behind centrexion.com, catalogued here, together with an llms.txt the site
+  generates for AI crawlers.
+image: https://centrexion.com/wp-content/uploads/2025/08/Centrexion_LOGO_275px.png
 url: https://raw.githubusercontent.com/api-evangelist/centrexion-therapeutics/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enriched
 specificationVersion: '0.20'
 created: '2026-08-09'
 modified: '2026-08-09'
 tags:
 - Company
-apis: []
+- biopharmaceutical
+- pharmaceuticals
+- chronic-pain
+- non-opioid-analgesics
+- immunology
+- inflammation
+- clinical-trials
+- life-sciences
+- content-api
+apis:
+- aid: centrexion-therapeutics:centrexion-therapeutics-content-api
+  name: Centrexion Therapeutics Content API
+  description: >-
+    The anonymously readable WordPress REST API behind centrexion.com. It exposes the six published
+    corporate pages (Home, Team, Pipeline, Contact, Privacy Policy, Terms of Use), the single
+    published post, the media library, the category and post_series taxonomies, the registered post
+    types and statuses, cross-content search, the navigation menu object, and the oEmbed 1.0
+    provider endpoint. This is not a developer product Centrexion markets; it is the site's own
+    content surface, registered at /wp-json/ and verified to return data without credentials. The
+    OpenAPI in this repo is derived from the published route index and restricted to operations that
+    answered anonymously.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - content
+  - wordpress
+  - corporate
+  - pages
+  - media
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-content-openapi.yml
+  - type: Overlay
+    url: overlays/centrexion-therapeutics-content-overlay.yaml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+  x-contract-provenance: >-
+    Derived by the API Evangelist enrichment pipeline from the WordPress REST route index the site
+    publishes at https://centrexion.com/wp-json/ — 320 routes across 10 namespaces (oembed/1.0,
+    wpe/cache-plugin/v1, wpe_sign_on_plugin/v1, aioseo/v1, sliderrevolution, google-site-kit/v1,
+    wp/v2, wp-site-health/v1, wp-block-editor/v1, wp-abilities/v1) — and verified against live
+    anonymous responses on 2026-08-09. Only operations that returned data without credentials are
+    modelled; every write route and the entire plugin-administration surface is excluded. Anonymous
+    401s recorded at harvest: /wp/v2/settings (rest_forbidden), /wp/v2/menus, /wp/v2/menu-locations
+    and /wp/v2/icons (rest_cannot_view), /wp/v2/themes (rest_cannot_view_themes), /wp/v2/plugins
+    (rest_cannot_view_plugins), /wp/v2/block-types (rest_block_type_cannot_view),
+    /wp/v2/font-collections (rest_cannot_read), /wp/v2/sidebars and /wp/v2/widget-types
+    (rest_cannot_manage_widgets), /wp/v2/pattern-directory/patterns
+    (rest_pattern_directory_cannot_view) and /wp/v2/block-patterns/categories (rest_cannot_view).
+    Notably the site registers the WordPress Abilities API (wp-abilities/v1), an agent-facing
+    capability registry whose /abilities and /categories routes both returned 401 rest_forbidden
+    anonymously, so no MCP, agent-card or agent-tool surface is claimed for this provider and no
+    MCPServer pointer is emitted. The company's 14 staff biographies are published as a WordPress
+    custom post type that is NOT registered for REST (absent from /wp/v2/types), so they are
+    reachable only as HTML and are deliberately not modelled. The deployment is served by nginx
+    behind WP Engine caching and sets x-robots-tag: noindex on API responses. Centrexion publishes
+    no developer documentation, no API reference, no getting-started guide and no support channel
+    for this surface, so no Documentation / APIReference / GettingStarted pointers are emitted; the
+    humanURL above is the upstream WordPress REST handbook that defines the wp/v2 contract. Nothing
+    here was obtained with credentials.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +100,47 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
+  url: https://centrexion.com/
+- type: Pipeline
+  url: https://centrexion.com/pipeline/
+- type: Leadership
+  url: https://centrexion.com/team/
+- type: Contact
+  url: https://centrexion.com/contact/
+- type: BlogRSS
+  url: https://centrexion.com/feed/
+- type: PrivacyPolicy
+  url: https://centrexion.com/privacy-policy/
+- type: TermsOfService
+  url: https://centrexion.com/terms-of-use/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/10487363
+- type: Twitter
+  url: https://x.com/CentrexionTX
+- type: SecondaryMarket
   url: https://forgeglobal.com/centrexion-therapeutics_stock/
+- type: Authentication
+  url: authentication/centrexion-therapeutics-authentication.yml
+- type: Conventions
+  url: conventions/centrexion-therapeutics-conventions.yml
+- type: Conformance
+  url: conformance/centrexion-therapeutics-conformance.yml
+- type: ErrorCatalog
+  url: errors/centrexion-therapeutics-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/centrexion-therapeutics-lifecycle.yml
+- type: DataModel
+  url: data-model/centrexion-therapeutics-data-model.yml
+- type: WellKnown
+  url: well-known/centrexion-therapeutics-well-known.yml
+- type: DomainSecurity
+  url: security/centrexion-therapeutics-domain-security.yml
+- type: LLMsTxt
+  url: llms/centrexion-therapeutics-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-08-09'
+  status: enriched
+  artifacts_added: 15
+  pass: local-v1

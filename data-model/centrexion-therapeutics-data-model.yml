@@ -1,0 +1,172 @@
+generated: '2026-08-09'
+method: derived
+source: openapi/centrexion-therapeutics-content-openapi.yml + live responses observed 2026-08-09
+note: >-
+  Entity-relationship graph derived from the WordPress REST object shapes actually returned by
+  centrexion.com on 2026-08-09. Relationships are taken from the id-reference fields on each object
+  (`author`, `featured_media`, `parent`, `post`, `categories`, `tags`, `post_series`) and from the
+  HAL `_links` relations WordPress emits. IDs are plain integers on this API — there are no
+  prefixed or typed identifiers.
+entities:
+- name: Post
+  rest_base: posts
+  route: /wp/v2/posts
+  id: integer
+  count_observed: 1
+  description: >-
+    The post collection. Holds only the stock WordPress "Hello world!" placeholder (id 1) on this
+    deployment — Centrexion publishes no news archive through REST.
+- name: Page
+  rest_base: pages
+  route: /wp/v2/pages
+  id: integer
+  count_observed: 6
+  description: >-
+    The corporate site: Home (15), Team (16), Pipeline (17), Contact (18), Terms of Use (174),
+    Privacy Policy (178). This is the substantive content of the API.
+- name: MediaItem
+  rest_base: media
+  route: /wp/v2/media
+  id: integer
+  count_observed: 26 retrievable (X-WP-Total reports 43)
+  description: >-
+    Media library attachments — 13 image/jpeg, 11 image/png and 1 video/mp4 among the retrievable
+    set. Includes the site logo (181) and favicon (189).
+- name: Term
+  rest_base: categories | tags | post_series
+  route: /wp/v2/categories
+  id: integer
+  count_observed: 1 category; tags and post_series empty
+  description: Taxonomy terms. Only the default Uncategorized category (id 1) exists.
+- name: Comment
+  rest_base: comments
+  route: /wp/v2/comments
+  id: integer
+  count_observed: 1
+  description: The default WordPress sample comment. Carries commenter personal data.
+- name: User
+  rest_base: users
+  route: /wp/v2/users
+  id: integer
+  count_observed: 2
+  description: >-
+    Public author records. Personal data — shape documented, records not reproduced. See
+    conventions/centrexion-therapeutics-conventions.yml under personal_data.
+- name: Navigation
+  rest_base: navigation
+  route: /wp/v2/navigation
+  id: integer
+  count_observed: 1
+  description: The wp_navigation object (id 4) holding the serialized site menu blocks.
+- name: PostType
+  rest_base: types
+  route: /wp/v2/types
+  id: string slug
+  count_observed: 13
+  description: Registration records for the registered post types.
+- name: Taxonomy
+  rest_base: taxonomies
+  route: /wp/v2/taxonomies
+  id: string slug
+  count_observed: 5
+  description: Registration records for category, post_tag, nav_menu, wp_pattern_category and post_series.
+relationships:
+- from: Post
+  to: User
+  type: belongs_to
+  via: author
+  cardinality: has_one
+  note: Integer user ID; resolvable via /wp/v2/users/{id} or _embed.
+- from: Post
+  to: MediaItem
+  type: belongs_to
+  via: featured_media
+  cardinality: has_one
+  note: 0 when no featured image is set.
+- from: Post
+  to: Term
+  type: has_many
+  via: categories
+  taxonomy: category
+- from: Post
+  to: Term
+  type: has_many
+  via: tags
+  taxonomy: post_tag
+  note: Always empty on this deployment — the taxonomy is registered but unused.
+- from: Post
+  to: Term
+  type: has_many
+  via: post_series
+  taxonomy: post_series
+  note: Always empty on this deployment.
+- from: Post
+  to: Comment
+  type: has_many
+  via: comment.post
+  note: Reverse relation — filter /wp/v2/comments?post={id}. Exposed as the `replies` _links relation.
+- from: Page
+  to: User
+  type: belongs_to
+  via: author
+  cardinality: has_one
+- from: Page
+  to: MediaItem
+  type: belongs_to
+  via: featured_media
+  cardinality: has_one
+- from: Page
+  to: Page
+  type: belongs_to
+  via: parent
+  cardinality: has_one
+  note: Self-referential hierarchy. 0 for a top-level page; all 6 pages are top-level here.
+- from: Comment
+  to: Post
+  type: belongs_to
+  via: post
+  cardinality: has_one
+- from: Comment
+  to: Comment
+  type: belongs_to
+  via: parent
+  cardinality: has_one
+  note: Self-referential threading. 0 for a top-level comment.
+- from: Comment
+  to: User
+  type: belongs_to
+  via: author
+  cardinality: has_one
+  note: 0 when the commenter was not a logged-in user, which is the case for the single sample comment.
+- from: MediaItem
+  to: Post
+  type: belongs_to
+  via: post
+  cardinality: has_one
+  note: The object the attachment was uploaded to. Nullable.
+- from: MediaItem
+  to: User
+  type: belongs_to
+  via: author
+  cardinality: has_one
+- from: Term
+  to: Term
+  type: belongs_to
+  via: parent
+  cardinality: has_one
+  note: Hierarchical taxonomies only (category). 0 at the root.
+- from: PostType
+  to: Taxonomy
+  type: has_many
+  via: taxonomies
+  note: Array of taxonomy slugs, not integer IDs.
+gaps:
+- >-
+  The 14 staff biographies rendered on the Team page are a WordPress custom post type that is NOT
+  registered for REST — it is absent from /wp/v2/types and has no route. There is therefore no Staff
+  entity in this graph and no relationship from Page to it, even though the content exists on the
+  site. It is reachable only as HTML inside pages/16 `content.rendered`.
+- >-
+  The drug pipeline (CNTX-4975 and the immunology programmes) is likewise not modelled as data. It
+  exists only as rendered HTML inside pages/17 `content.rendered`. There is no structured
+  representation of programmes, indications, mechanisms or clinical phases anywhere on this API.

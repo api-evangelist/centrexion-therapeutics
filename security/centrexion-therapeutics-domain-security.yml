@@ -1,0 +1,61 @@
+generated: '2026-08-09'
+method: probed
+source: live DNS/TLS/HTTP probes of the centrexion.com host and registrable domain
+note: >-
+  Probed 2026-08-09 by the API Evangelist enrichment pipeline. Only Centrexion Therapeutics' own
+  host and registrable domain are recorded. The apis.yml humanURL for the content API points at
+  developer.wordpress.org (the upstream WordPress REST handbook that documents the wp/v2 contract);
+  that host is not operated by Centrexion and its posture is deliberately excluded so it is not
+  misattributed to this provider. The site is a WordPress deployment served by nginx and hosted on
+  WP Engine (x-powered-by: WP Engine). HTTPS is enforced by redirect (http:// and www. both 301 to
+  https://centrexion.com/) but no Strict-Transport-Security header is sent, so the redirect is the
+  only downgrade protection. No CAA records and no DNSSEC are published; DNS is delegated to
+  Register.com.
+hosts:
+- host: centrexion.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 23 21:24:08 2026 GMT
+  hsts: false
+  server: nginx
+  origin: WP Engine (x-powered-by response header observed)
+  http_to_https_redirect: 301
+  www_redirect: 301 to apex
+domains:
+- domain: centrexion.com
+  dnssec: false
+  caa: []
+  spf: true
+  spf_record: 'v=spf1 include:1xalkvunf.spf.checkpoint-spf.com -all'
+  dmarc: false
+  nameservers:
+  - dns101.register.com
+  - dns102.register.com
+observations:
+- >-
+  No DMARC record is published at _dmarc.centrexion.com (empty TXT response). SPF is present and
+  strict (-all, delegated to Check Point's hosted email-security SPF service), but with no DMARC
+  policy there is no alignment enforcement and no aggregate or forensic reporting, so the domain has
+  neither spoofing enforcement beyond SPF nor any visibility into abuse.
+- >-
+  DANGLING CNAME — investors.centrexion.com is a CNAME to centrexion.gcs-web.com, and that target
+  has no A record while its parent zone gcs-web.com is live on AWS Route 53 nameservers. The name
+  therefore resolves as a CNAME but terminates in NXDOMAIN, and nothing answers on 80 or 443. A
+  CNAME left pointing at a de-provisioned host on a third-party investor-relations platform is the
+  classic subdomain-takeover precondition; whoever can claim that hostname on the upstream platform
+  inherits a subdomain of centrexion.com. Recommend deleting the record or reclaiming the target.
+- >-
+  portal.centrexion.com resolves to 72.20.122.198 but both 443 and 80 are closed/filtered — a stale
+  A record for a host that no longer serves. sharepoint.centrexion.com (66.227.71.31) behaves the
+  same way. Neither is a live surface; both are residue.
+- No Strict-Transport-Security header on the site root.
+- No Content-Security-Policy header on the site root.
+- No X-Content-Type-Options, X-Frame-Options, Referrer-Policy or Permissions-Policy header on the site root.
+- >-
+  API responses under /wp-json do send x-content-type-options nosniff and x-robots-tag noindex, and
+  expose Access-Control-Expose-Headers for X-WP-Total, X-WP-TotalPages and Link.
+- No /.well-known/security.txt (RFC 9116) published — see well-known/centrexion-therapeutics-well-known.yml.
+- >-
+  No api., developer., docs., status., trust., mcp., support., vpn., intranet., files. or careers.
+  subdomain resolves for centrexion.com (NXDOMAIN on all eleven), consistent with a company that
+  runs no developer program and no status or trust surface.

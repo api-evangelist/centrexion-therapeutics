@@ -1,0 +1,66 @@
+generated: '2026-08-09'
+method: derived
+source: >-
+  openapi/centrexion-therapeutics-content-openapi.yml + live probes of centrexion.com on 2026-08-09
+note: >-
+  Centrexion Therapeutics publishes no API lifecycle commitments of any kind — no versioning policy,
+  no deprecation policy, no SLA, no status page and no changelog. That is the expected posture for a
+  company that runs no developer programme: the surface catalogued here is its marketing site's CMS
+  API, not a product it supports for third parties. Everything below is derived from what the
+  deployment actually emits. No StatusPage pointer and no Deprecation pointer are emitted in
+  apis.yml, because neither artifact exists to point at; emitting them would claim operational
+  transparency this provider has not published.
+versioning:
+  scheme: uri-path namespace
+  current: wp/v2
+  policy_url: null
+  detail: >-
+    The version is the namespace segment of the path. Ten namespaces are registered on this
+    deployment: oembed/1.0, wpe/cache-plugin/v1, wpe_sign_on_plugin/v1, aioseo/v1, sliderrevolution,
+    google-site-kit/v1, wp/v2, wp-site-health/v1, wp-block-editor/v1 and wp-abilities/v1. The
+    content contract is wp/v2. Version cadence is set by WordPress core and by the site's plugin
+    set, not by Centrexion — the company does not control, document or announce it.
+  upstream_contract: https://developer.wordpress.org/rest-api/
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  detail: >-
+    No RFC 8594 Sunset header and no Deprecation header is emitted on any response. No deprecation
+    policy is published. No operation in the derived OpenAPI is marked deprecated, because the route
+    index flags none.
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  detail: No service level agreement or availability commitment is published for this surface.
+status_page:
+  url: null
+  detail: >-
+    No status page exists. status.centrexion.com does not resolve (NXDOMAIN), and no status or
+    uptime page is linked from the site. The underlying host is WP Engine, whose own platform status
+    page is not a Centrexion artifact and is deliberately not recorded as one.
+changelog:
+  url: null
+  detail: >-
+    No changelog, release notes or version history is published for the site or the API. The
+    company publishes no news archive through REST either — the post collection holds only the stock
+    WordPress placeholder.
+support:
+  developer_channel: null
+  detail: >-
+    There is no developer support channel, no forum, no issue tracker and no developer contact.
+    General corporate contacts published on the Contact page are info@centrexion.com and
+    bd@centrexion.com (business development); neither is an API support channel and neither is
+    wired as a Support pointer.
+observed_freshness:
+  detail: >-
+    Content dates observed 2026-08-09: pages created 2025-07-25 through 2025-08-11; most recent page
+    modification 2026-01-06 (Team). The single post dates to 2025-07-25. The site was evidently
+    rebuilt in mid-2025 and is lightly maintained since.
+stability_assessment:
+  detail: >-
+    This is an incidental surface. It carries no compatibility promise, and Centrexion has no stated
+    obligation to keep it stable — a plugin change, a theme change or a WordPress upgrade can alter
+    or remove routes without notice. Any consumer should treat it as unversioned in practice and
+    revalidate against the live route index at /wp-json/ rather than caching this contract.

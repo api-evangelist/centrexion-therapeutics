@@ -1,0 +1,97 @@
+generated: '2026-08-09'
+method: derived
+source: openapi/centrexion-therapeutics-content-openapi.yml + live error responses observed 2026-08-09
+format: wordpress-rest-error
+rfc9457: false
+note: >-
+  This API does NOT use RFC 9457 problem+json. It returns the WordPress REST error envelope —
+  `{"code": "<machine_code>", "message": "<human message>", "data": {"status": <http_status>}}` —
+  with `Content-Type: application/json`. On `rest_invalid_param` the `data` object additionally
+  carries `params` (per-parameter human messages) and `details` (per-parameter structured detail).
+  Every entry below was produced by an actual request made anonymously on 2026-08-09; the `probe`
+  field records the exact request that produced it. Codes are stable WordPress core identifiers and
+  are the correct thing for a client to branch on — the `message` strings are localisable and must
+  not be matched against.
+envelope:
+  fields:
+    code: Machine-readable, stable, safe to branch on.
+    message: Human-readable and localisable. Do not match on this.
+    data.status: The HTTP status code, duplicated inside the body.
+    data.params: Present only on rest_invalid_param — a map of parameter name to message.
+    data.details: Present only on rest_invalid_param — a map of parameter name to structured detail.
+problems:
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  detail: The requested post, page or attachment ID does not exist or is not published.
+  probe: GET /wp/v2/posts/999999
+  also_observed_on: [GET /wp/v2/pages/999999, GET /wp/v2/media/999999]
+  source_operation: openapi/centrexion-therapeutics-content-openapi.yml#getPost
+  remediation: Resolve the ID from a collection or search response before requesting it directly.
+- status: 404
+  code: rest_term_invalid
+  title: Term does not exist
+  detail: The requested taxonomy term ID does not exist.
+  probe: GET /wp/v2/categories/999999
+  source_operation: openapi/centrexion-therapeutics-content-openapi.yml#getCategory
+  remediation: Enumerate /wp/v2/categories first — only the default Uncategorized term (id 1) exists.
+- status: 404
+  code: rest_comment_invalid_id
+  title: Invalid comment ID
+  detail: The requested comment ID does not exist.
+  probe: GET /wp/v2/comments/999999
+  source_operation: openapi/centrexion-therapeutics-content-openapi.yml#getComment
+  remediation: Enumerate /wp/v2/comments first.
+- status: 404
+  code: rest_type_invalid
+  title: Invalid post type
+  detail: The requested post type is not registered on this site.
+  probe: GET /wp/v2/types/nope
+  source_operation: openapi/centrexion-therapeutics-content-openapi.yml#getPostType
+  remediation: Read /wp/v2/types for the 13 registered type slugs.
+- status: 404
+  code: rest_no_route
+  title: No route was found matching the URL and request method
+  detail: The path is not a registered route, or the method is not allowed on it.
+  probe: GET /wp/v2/nonexistent
+  remediation: >-
+    Read the route table from the index at /wp-json/. Note this is also what a write attempt looks
+    like on a GET-only route, since only GET is registered for the public surface.
+- status: 404
+  code: oembed_invalid_url
+  title: Not Found
+  detail: The url parameter does not point at a resource on centrexion.com.
+  probe: GET /oembed/1.0/embed?url=https://example.com/
+  source_operation: openapi/centrexion-therapeutics-content-openapi.yml#getOembed
+  remediation: Pass only URLs on the centrexion.com origin.
+- status: 400
+  code: rest_invalid_param
+  title: Invalid parameter(s)
+  detail: >-
+    A query parameter failed validation. The response body names the offending parameter in both
+    data.params and data.details. Two distinct causes were observed — a per_page above the maximum
+    of 100, and a status other than publish requested anonymously.
+  probe: GET /wp/v2/posts?per_page=500
+  also_observed_on: ['GET /wp/v2/posts?status=draft']
+  source_operation: openapi/centrexion-therapeutics-content-openapi.yml#listPosts
+  remediation: >-
+    Keep per_page between 1 and 100. Do not request a status other than publish without
+    credentials — an anonymous caller cannot see any other status on this deployment.
+- status: 401
+  code: rest_cannot_read_status
+  title: Cannot view status
+  detail: The requested post status is not readable by an unauthenticated caller.
+  probe: GET /wp/v2/statuses/draft
+  source_operation: openapi/centrexion-therapeutics-content-openapi.yml#getStatus
+  remediation: Only `publish` is anonymously readable; see authentication/centrexion-therapeutics-authentication.yml.
+- status: 401
+  code: rest_forbidden
+  title: Sorry, you are not allowed to do that
+  detail: >-
+    The route requires authentication. Returned by /wp/v2/settings and by both routes of the
+    wp-abilities/v1 namespace.
+  probe: GET /wp/v2/settings
+  also_observed_on: [GET /wp-abilities/v1/abilities, GET /wp-abilities/v1/categories]
+  remediation: >-
+    Not remediable anonymously. The full list of gated routes and their distinct 401 codes is in
+    authentication/centrexion-therapeutics-authentication.yml under gated_surface.
