@@ -37,30 +37,17 @@ tags:
 - life-sciences
 - content-api
 apis:
-- aid: centrexion-therapeutics:centrexion-therapeutics-content-api
-  name: Centrexion Therapeutics Content API
+- aid: centrexion-therapeutics:centrexion-therapeutics-comments-api
+  name: Centrexion Therapeutics Comments API
   description: >-
-    The anonymously readable WordPress REST API behind centrexion.com. It exposes the six published
-    corporate pages (Home, Team, Pipeline, Contact, Privacy Policy, Terms of Use), the single
-    published post, the media library, the category and post_series taxonomies, the registered post
-    types and statuses, cross-content search, the navigation menu object, and the oEmbed 1.0
-    provider endpoint. This is not a developer product Centrexion markets; it is the site's own
-    content surface, registered at /wp-json/ and verified to return data without credentials. The
-    OpenAPI in this repo is derived from the published route index and restricted to operations that
-    answered anonymously.
+    Comment collection — one item, the default WordPress sample comment on the placeholder post.
   humanURL: https://developer.wordpress.org/rest-api/
   baseURL: https://centrexion.com/wp-json
   tags:
-  - content
-  - wordpress
-  - corporate
-  - pages
-  - media
+  - comments
   properties:
   - type: OpenAPI
-    url: openapi/centrexion-therapeutics-content-openapi.yml
-  - type: Overlay
-    url: overlays/centrexion-therapeutics-content-overlay.yaml
+    url: openapi/centrexion-therapeutics-comments-api-openapi.yml
   - type: Authentication
     url: authentication/centrexion-therapeutics-authentication.yml
   - type: ErrorCatalog
@@ -69,36 +56,189 @@ apis:
     url: conventions/centrexion-therapeutics-conventions.yml
   - type: DataModel
     url: data-model/centrexion-therapeutics-data-model.yml
-  x-contract-provenance: >-
-    Derived by the API Evangelist enrichment pipeline from the WordPress REST route index the site
-    publishes at https://centrexion.com/wp-json/ — 320 routes across 10 namespaces (oembed/1.0,
-    wpe/cache-plugin/v1, wpe_sign_on_plugin/v1, aioseo/v1, sliderrevolution, google-site-kit/v1,
-    wp/v2, wp-site-health/v1, wp-block-editor/v1, wp-abilities/v1) — and verified against live
-    anonymous responses on 2026-08-09. Only operations that returned data without credentials are
-    modelled; every write route and the entire plugin-administration surface is excluded. Anonymous
-    401s recorded at harvest: /wp/v2/settings (rest_forbidden), /wp/v2/menus, /wp/v2/menu-locations
-    and /wp/v2/icons (rest_cannot_view), /wp/v2/themes (rest_cannot_view_themes), /wp/v2/plugins
-    (rest_cannot_view_plugins), /wp/v2/block-types (rest_block_type_cannot_view),
-    /wp/v2/font-collections (rest_cannot_read), /wp/v2/sidebars and /wp/v2/widget-types
-    (rest_cannot_manage_widgets), /wp/v2/pattern-directory/patterns
-    (rest_pattern_directory_cannot_view) and /wp/v2/block-patterns/categories (rest_cannot_view).
-    Notably the site registers the WordPress Abilities API (wp-abilities/v1), an agent-facing
-    capability registry whose /abilities and /categories routes both returned 401 rest_forbidden
-    anonymously, so no MCP, agent-card or agent-tool surface is claimed for this provider and no
-    MCPServer pointer is emitted. The company's 14 staff biographies are published as a WordPress
-    custom post type that is NOT registered for REST (absent from /wp/v2/types), so they are
-    reachable only as HTML and are deliberately not modelled. The deployment is served by nginx
-    behind WP Engine caching and sets x-robots-tag: noindex on API responses. Centrexion publishes
-    no developer documentation, no API reference, no getting-started guide and no support channel
-    for this surface, so no Documentation / APIReference / GettingStarted pointers are emitted; the
-    humanURL above is the upstream WordPress REST handbook that defines the wp/v2 contract. Nothing
-    here was obtained with credentials.
+- aid: centrexion-therapeutics:centrexion-therapeutics-custom-types-api
+  name: Centrexion Therapeutics Custom Types API
+  description: >-
+    Theme custom post types (`wpex_templates` Dynamic Templates, `wpex_card` Custom Cards). Registered
+    and anonymously reachable, but both report zero published items.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - custom-types
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-custom-types-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+- aid: centrexion-therapeutics:centrexion-therapeutics-discovery-api
+  name: Centrexion Therapeutics Discovery API
+  description: Route, type, taxonomy and status discovery documents.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-discovery-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+- aid: centrexion-therapeutics:centrexion-therapeutics-media-api
+  name: Centrexion Therapeutics Media API
+  description: >-
+    Media library. `X-WP-Total` reports 43 attachments; anonymous enumeration returns fewer (see the listMedia
+    description).
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - media
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-media-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+- aid: centrexion-therapeutics:centrexion-therapeutics-oembed-api
+  name: Centrexion Therapeutics Oembed API
+  description: oEmbed 1.0 provider endpoint for centrexion.com URLs.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - oembed
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-oembed-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+- aid: centrexion-therapeutics:centrexion-therapeutics-pages-api
+  name: Centrexion Therapeutics Pages API
+  description: >-
+    Corporate pages (6 published at harvest time — Home, Team, Pipeline, Contact, Privacy Policy, Terms
+    of Use).
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - pages
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-pages-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+- aid: centrexion-therapeutics:centrexion-therapeutics-people-api
+  name: Centrexion Therapeutics People API
+  description: >-
+    Author records. Anonymously readable on this deployment. Contains personal data — see the operation
+    description; deliberately excluded from the generated Agent Skills.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - people
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-people-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+- aid: centrexion-therapeutics:centrexion-therapeutics-posts-api
+  name: Centrexion Therapeutics Posts API
+  description: >-
+    The blog/post collection. On this deployment it holds exactly one item — the stock WordPress "Hello
+    world!" placeholder from 2025-07-25. Centrexion publishes no news or press-release archive through
+    REST.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - posts
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-posts-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+- aid: centrexion-therapeutics:centrexion-therapeutics-search-api
+  name: Centrexion Therapeutics Search API
+  description: Cross-content search across published objects (7 searchable objects at harvest time).
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - search
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-search-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+- aid: centrexion-therapeutics:centrexion-therapeutics-taxonomy-api
+  name: Centrexion Therapeutics Taxonomy API
+  description: >-
+    Categories, tags and the post_series taxonomy. Only the default `Uncategorized` category exists; `post_tag`
+    and `post_series` are registered but empty.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - taxonomy
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-taxonomy-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/centrexion-therapeutics-content-overlay.yaml
 - type: Website
   url: https://centrexion.com/
 - type: Pipeline
