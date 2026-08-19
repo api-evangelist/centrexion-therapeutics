@@ -1,0 +1,383 @@
+openapi: 3.2.0
+info:
+  title: Centrexion Therapeutics Content Pages API
+  version: wp/v2
+  summary: Anonymously readable WordPress REST content API behind centrexion.com.
+  description: The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json. Centrexion is a late clinical-stage biopharmaceutical company in Boston, Massachusetts developing non-opioid, non-addictive therapies for chronic pain — led by CNTX-4975, a synthetic trans-capsaicin injected intra-articularly that reversibly deactivates TRPV1-expressing pain fibers — alongside an emerging immunology and inflammation portfolio. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-09. Write operations, `/wp/v2/settings`, `/wp/v2/menus`, `/wp/v2/menu-locations`, `/wp/v2/themes`, `/wp/v2/plugins`, `/wp/v2/block-types`, `/wp/v2/font-collections`, `/wp/v2/icons`, `/wp/v2/sidebars`, `/wp/v2/widget-types`, the pattern-directory routes, the `wp-abilities/v1` namespace and the whole plugin-administration surface all require authentication and are deliberately excluded — see x-api-evangelist-provenance.
+  contact:
+    name: Centrexion Therapeutics
+    url: https://centrexion.com/
+    email: info@centrexion.com
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route index at https://centrexion.com/wp-json/ (320 routes across 10 namespaces) and verified against live anonymous responses on 2026-08-09. Every parameter below appears verbatim in the route index `args` for that endpoint, and every collection count in a description was read from the `X-WP-Total` response header on that date. Centrexion publishes no OpenAPI, no developer documentation and no API reference for this surface; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines the wp/v2 contract. The 14 staff biographies the site publishes are a WordPress custom post type that is NOT registered for REST — it does not appear in /wp/v2/types and has no route — so it is reachable only as HTML and is not modelled here. The deployment is served by nginx on WP Engine, responses carry `x-robots-tag: noindex` and are edge-cached (`x-cacheable: SHORT`, `cache-control: max-age=600`). Nothing here was obtained with credentials.'
+servers:
+- url: https://centrexion.com/wp-json
+  description: Production content API
+tags:
+- name: pages
+  description: Corporate pages (6 published at harvest time — Home, Team, Pipeline, Contact, Privacy Policy, Terms of Use).
+paths:
+  /wp/v2/pages:
+    get:
+      tags:
+      - pages
+      operationId: listPages
+      summary: List corporate pages
+      description: 'Lists published pages. On this deployment the collection is the whole public site — 6 pages: Home (id 15), Team (16), Pipeline (17), Contact (18), Terms of Use (174) and Privacy Policy (178). The Team page renders 14 staff biographies from a non-REST custom post type, so the individual biographies are not retrievable through this API; only the rendered page HTML in `content.rendered` contains them.'
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/Search'
+      - $ref: '#/components/parameters/SearchColumns'
+      - $ref: '#/components/parameters/After'
+      - $ref: '#/components/parameters/Before'
+      - $ref: '#/components/parameters/ModifiedAfter'
+      - $ref: '#/components/parameters/ModifiedBefore'
+      - $ref: '#/components/parameters/Exclude'
+      - $ref: '#/components/parameters/Include'
+      - $ref: '#/components/parameters/Offset'
+      - $ref: '#/components/parameters/Order'
+      - $ref: '#/components/parameters/Slug'
+      - $ref: '#/components/parameters/Status'
+      - name: orderby
+        in: query
+        description: Sort collection by object attribute.
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          - menu_order
+          default: date
+      - name: parent
+        in: query
+        description: Limit result set to items with particular parent IDs.
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: parent_exclude
+        in: query
+        description: Limit result set to all items except those of a particular parent ID.
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: menu_order
+        in: query
+        description: Limit result set to posts with a specific menu_order value.
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: A collection of pages
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+                examples:
+                - 6
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+                examples:
+                - 1
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Page'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /wp/v2/pages/{id}:
+    get:
+      tags:
+      - pages
+      operationId: getPage
+      summary: Get a single page
+      description: Retrieves one corporate page by numeric ID. `content.rendered` carries the full page HTML — for id 17 (Pipeline) and id 16 (Team) this is the only machine-reachable form of the pipeline and leadership content.
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/Context'
+      - name: password
+        in: query
+        description: The password for the page if it is password protected.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Page'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    Search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    ModifiedBefore:
+      name: modified_before
+      in: query
+      description: Limit response to posts modified before a given ISO 8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    After:
+      name: after
+      in: query
+      description: Limit response to posts published after a given ISO 8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    Status:
+      name: status
+      in: query
+      description: Limit result set to items assigned one or more statuses. Anonymously only `publish` is permitted; any other value returns 400 rest_invalid_param.
+      schema:
+        type: array
+        items:
+          type: string
+        default:
+        - publish
+    Offset:
+      name: offset
+      in: query
+      description: Offset the result set by a specific number of items.
+      schema:
+        type: integer
+    ModifiedAfter:
+      name: modified_after
+      in: query
+      description: Limit response to posts modified after a given ISO 8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Before:
+      name: before
+      in: query
+      description: Limit response to posts published before a given ISO 8601 compliant date.
+      schema:
+        type: string
+        format: date-time
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    Order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the object.
+      schema:
+        type: integer
+    Slug:
+      name: slug
+      in: query
+      description: Limit result set to items with one or more specific slugs.
+      schema:
+        type: array
+        items:
+          type: string
+    Include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    SearchColumns:
+      name: search_columns
+      in: query
+      description: Array of column names to be searched.
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+          - post_title
+          - post_content
+          - post_excerpt
+  schemas:
+    RenderedText:
+      type: object
+      description: WordPress rendered-text object.
+      properties:
+        rendered:
+          type: string
+          description: HTML for the object
+          transformed for display.: null
+        protected:
+          type: boolean
+          description: Whether the content is protected with a password.
+    Page:
+      type: object
+      description: A corporate page.
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        date_gmt:
+          type: string
+          format: date-time
+        guid:
+          $ref: '#/components/schemas/RenderedText'
+        modified:
+          type: string
+          format: date-time
+        modified_gmt:
+          type: string
+          format: date-time
+        slug:
+          type: string
+        status:
+          type: string
+        type:
+          type: string
+          examples:
+          - page
+        link:
+          type: string
+          format: uri
+        title:
+          $ref: '#/components/schemas/RenderedText'
+        content:
+          $ref: '#/components/schemas/RenderedText'
+        excerpt:
+          $ref: '#/components/schemas/RenderedText'
+        author:
+          type: integer
+        featured_media:
+          type: integer
+        parent:
+          type: integer
+        menu_order:
+          type: integer
+        comment_status:
+          type: string
+        ping_status:
+          type: string
+        template:
+          type: string
+        meta:
+          type: object
+        class_list:
+          type: array
+          items:
+            type: string
+        aioseo_notices:
+          type: array
+          items:
+            type: string
+        _links:
+          type: object
+    Error:
+      type: object
+      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+              examples:
+              - 404
+            params:
+              type: object
+              description: Per-parameter messages, present on rest_invalid_param.
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              description: Per-parameter structured detail, present on rest_invalid_param.
+              additionalProperties:
+                type: object
+  responses:
+    BadRequest:
+      description: Invalid parameter — code `rest_invalid_param`
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Object not found — code `rest_post_invalid_id`
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

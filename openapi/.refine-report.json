@@ -1,0 +1,44 @@
+{
+  "provider": "centrexion-therapeutics",
+  "sources": [
+    "centrexion-therapeutics-comments-api-openapi.yml",
+    "centrexion-therapeutics-custom-types-api-openapi.yml",
+    "centrexion-therapeutics-discovery-api-openapi.yml",
+    "centrexion-therapeutics-media-api-openapi.yml",
+    "centrexion-therapeutics-oembed-api-openapi.yml",
+    "centrexion-therapeutics-pages-api-openapi.yml",
+    "centrexion-therapeutics-people-api-openapi.yml",
+    "centrexion-therapeutics-posts-api-openapi.yml",
+    "centrexion-therapeutics-search-api-openapi.yml",
+    "centrexion-therapeutics-taxonomy-api-openapi.yml"
+  ],
+  "outputs": [
+    "centrexion-therapeutics-comments-api-openapi.yml",
+    "centrexion-therapeutics-custom-types-api-openapi.yml",
+    "centrexion-therapeutics-discovery-api-openapi.yml",
+    "centrexion-therapeutics-media-api-openapi.yml",
+    "centrexion-therapeutics-oembed-api-openapi.yml",
+    "centrexion-therapeutics-pages-api-openapi.yml",
+    "centrexion-therapeutics-people-api-openapi.yml",
+    "centrexion-therapeutics-posts-api-openapi.yml",
+    "centrexion-therapeutics-search-api-openapi.yml",
+    "centrexion-therapeutics-taxonomy-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "centrexion-therapeutics-comments-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "centrexion-therapeutics-custom-types-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "centrexion-therapeutics-discovery-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "centrexion-therapeutics-media-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "centrexion-therapeutics-oembed-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "centrexion-therapeutics-pages-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "centrexion-therapeutics-people-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "centrexion-therapeutics-posts-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "centrexion-therapeutics-search-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "centrexion-therapeutics-taxonomy-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": []
+}

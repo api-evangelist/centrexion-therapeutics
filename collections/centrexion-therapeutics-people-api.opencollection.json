@@ -1,0 +1,67 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Centrexion Therapeutics Content People API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "people",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List public author records",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/users",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Order sort attribute ascending or descending."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to terms or users with one or more specific slugs."
+              }
+            ]
+          },
+          "docs": "Lists users who have authored published content. This deployment returns 2 records anonymously (`X-WP-Total: 2`), each carrying `name`, `slug`, `description`, `url`, `link` and `avatar_urls` — WordPress does not expose user email addresses on this route. This is the default WordPress behaviour rather than a Centrexion configuration choice, but it is personal data about identifiable people, so API Evangelist records the endpoint's existence and shape and deliberately does NOT reproduce any indivi"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

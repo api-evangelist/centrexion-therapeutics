@@ -1,0 +1,128 @@
+openapi: 3.2.0
+info:
+  title: Centrexion Therapeutics Content Custom Types API
+  version: wp/v2
+  summary: Anonymously readable WordPress REST content API behind centrexion.com.
+  description: The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json. Centrexion is a late clinical-stage biopharmaceutical company in Boston, Massachusetts developing non-opioid, non-addictive therapies for chronic pain — led by CNTX-4975, a synthetic trans-capsaicin injected intra-articularly that reversibly deactivates TRPV1-expressing pain fibers — alongside an emerging immunology and inflammation portfolio. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-09. Write operations, `/wp/v2/settings`, `/wp/v2/menus`, `/wp/v2/menu-locations`, `/wp/v2/themes`, `/wp/v2/plugins`, `/wp/v2/block-types`, `/wp/v2/font-collections`, `/wp/v2/icons`, `/wp/v2/sidebars`, `/wp/v2/widget-types`, the pattern-directory routes, the `wp-abilities/v1` namespace and the whole plugin-administration surface all require authentication and are deliberately excluded — see x-api-evangelist-provenance.
+  contact:
+    name: Centrexion Therapeutics
+    url: https://centrexion.com/
+    email: info@centrexion.com
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route index at https://centrexion.com/wp-json/ (320 routes across 10 namespaces) and verified against live anonymous responses on 2026-08-09. Every parameter below appears verbatim in the route index `args` for that endpoint, and every collection count in a description was read from the `X-WP-Total` response header on that date. Centrexion publishes no OpenAPI, no developer documentation and no API reference for this surface; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines the wp/v2 contract. The 14 staff biographies the site publishes are a WordPress custom post type that is NOT registered for REST — it does not appear in /wp/v2/types and has no route — so it is reachable only as HTML and is not modelled here. The deployment is served by nginx on WP Engine, responses carry `x-robots-tag: noindex` and are edge-cached (`x-cacheable: SHORT`, `cache-control: max-age=600`). Nothing here was obtained with credentials.'
+servers:
+- url: https://centrexion.com/wp-json
+  description: Production content API
+tags:
+- name: custom-types
+  description: Theme custom post types (`wpex_templates` Dynamic Templates, `wpex_card` Custom Cards). Registered and anonymously reachable, but both report zero published items.
+paths:
+  /wp/v2/blocks:
+    get:
+      tags:
+      - custom-types
+      operationId: listReusableBlocks
+      summary: List reusable blocks (patterns)
+      description: Lists `wp_block` reusable pattern objects. Empty on this deployment.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/Search'
+      - $ref: '#/components/parameters/Slug'
+      responses:
+        '200':
+          description: A collection of reusable blocks (empty on this deployment)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /wp/v2/wpex_templates:
+    get:
+      tags:
+      - custom-types
+      operationId: listDynamicTemplates
+      summary: List theme Dynamic Templates
+      description: Lists the theme's `wpex_templates` (Dynamic Templates) custom post type. Registered and anonymously reachable, but reports zero published items.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/Search'
+      - $ref: '#/components/parameters/Slug'
+      responses:
+        '200':
+          description: A collection of dynamic templates (empty on this deployment)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+  /wp/v2/wpex_card:
+    get:
+      tags:
+      - custom-types
+      operationId: listCustomCards
+      summary: List theme Custom Cards
+      description: Lists the theme's `wpex_card` (Custom Cards) custom post type. Registered and anonymously reachable, but reports zero published items.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/Search'
+      - $ref: '#/components/parameters/Slug'
+      responses:
+        '200':
+          description: A collection of custom cards (empty on this deployment)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+components:
+  parameters:
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Slug:
+      name: slug
+      in: query
+      description: Limit result set to items with one or more specific slugs.
+      schema:
+        type: array
+        items:
+          type: string

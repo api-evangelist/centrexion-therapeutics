@@ -1,0 +1,565 @@
+{
+  "item": [
+    {
+      "id": "459a090f-d1c1-4f25-ba3f-fc9d5bf6c757",
+      "name": "media",
+      "description": {
+        "content": "Media library. `X-WP-Total` reports 43 attachments; anonymous enumeration returns fewer (see the listMedia description).",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3fe51b06-4b65-4e3f-b210-17c3a506d2d6",
+          "name": "List media library attachments",
+          "request": {
+            "name": "List media library attachments",
+            "description": {
+              "content": "Lists media attachments. This collection has a documented counting anomaly on this deployment: `X-WP-Total` consistently reports 43 and `X-WP-TotalPages` is computed from it, but the anonymous result set is always smaller than the requested page — observed 2026-08-09 as 0 items for `per_page=1`, 2 for `per_page=5`, 7 for `per_page=10` and 26 for `per_page=100`. Roughly 17 attachments are counted by the header but filtered out of the anonymous response, so `X-WP-Total` must not be trusted as the retrievable item count and a client must page to exhaustion rather than relying on `X-WP-TotalPages`. Observed MIME types across the 26 retrievable items: 13 image/jpeg, 11 image/png, 1 video/mp4, 1 empty.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "wp",
+                "v2",
+                "media"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "context",
+                  "value": "view",
+                  "description": "Scope under which the request is made; determines fields present in the response."
+                },
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Current page of the collection."
+                },
+                {
+                  "disabled": false,
+                  "key": "per_page",
+                  "value": "10",
+                  "description": "Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param."
+                },
+                {
+                  "disabled": false,
+                  "key": "search",
+                  "value": "<string>",
+                  "description": "Limit results to those matching a string."
+                },
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<dateTime>",
+                  "description": "Limit response to posts published after a given ISO 8601 compliant date."
+                },
+                {
+                  "disabled": false,
+                  "key": "before",
+                  "value": "<dateTime>",
+                  "description": "Limit response to posts published before a given ISO 8601 compliant date."
+                },
+                {
+                  "disabled": false,
+                  "key": "modified_after",
+                  "value": "<dateTime>",
+                  "description": "Limit response to posts modified after a given ISO 8601 compliant date."
+                },
+                {
+                  "disabled": false,
+                  "key": "modified_before",
+                  "value": "<dateTime>",
+                  "description": "Limit response to posts modified before a given ISO 8601 compliant date."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<integer>",
+                  "description": "Ensure result set excludes specific IDs."
+                },
+                {
+                  "disabled": false,
+                  "key": "exclude",
+                  "value": "<integer>",
+                  "description": "Ensure result set excludes specific IDs."
+                },
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<integer>",
+                  "description": "Limit result set to specific IDs."
+                },
+                {
+                  "disabled": false,
+                  "key": "include",
+                  "value": "<integer>",
+                  "description": "Limit result set to specific IDs."
+                },
+                {
+                  "disabled": false,
+                  "key": "offset",
+                  "value": "<integer>",
+                  "description": "Offset the result set by a specific number of items."
+                },
+                {
+                  "disabled": false,
+                  "key": "order",
+                  "value": "desc",
+                  "description": "Order sort attribute ascending or descending."
+                },
+                {
+                  "disabled": false,
+                  "key": "slug",
+                  "value": "<string>",
+                  "description": "Limit result set to items with one or more specific slugs."
+                },
+                {
+                  "disabled": false,
+                  "key": "slug",
+                  "value": "<string>",
+                  "description": "Limit result set to items with one or more specific slugs."
+                },
+                {
+                  "disabled": false,
+                  "key": "media_type",
+                  "value": "<string>",
+                  "description": "Limit result set to attachments of a particular media type."
+                },
+                {
+                  "disabled": false,
+                  "key": "mime_type",
+                  "value": "<string>",
+                  "description": "Limit result set to attachments of a particular MIME type."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "20300f16-5dd5-4d5a-8a78-1eb501301f10",
+              "name": "A collection of media attachments",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "media"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "before",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "modified_after",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "modified_before",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "include",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "include",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "order",
+                      "value": "desc"
+                    },
+                    {
+                      "key": "slug",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slug",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "media_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mime_type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Total reported by WordPress. Unreliable on this deployment — see the operation description.",
+                  "key": "X-WP-Total",
+                  "value": "7699"
+                },
+                {
+                  "disabled": false,
+                  "description": "Total number of pages available, computed from X-WP-Total.",
+                  "key": "X-WP-TotalPages",
+                  "value": "6383"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 119,\n    \"date\": \"1970-10-28T03:46:47.447Z\",\n    \"date_gmt\": \"1961-09-19T00:30:11.209Z\",\n    \"guid\": {\n      \"rendered\": \"string\",\n      \"protected\": true\n    },\n    \"modified\": \"1978-09-16T06:36:28.589Z\",\n    \"modified_gmt\": \"2013-04-08T08:43:31.182Z\",\n    \"slug\": \"string\",\n    \"status\": \"string\",\n    \"type\": \"string\",\n    \"link\": \"https://PlVSRUosP.ediqYOKrJiH4VL6r0pL0DffTluk-iXWKp-6-i9UFSzbwxDiYpxwFzjJ.EgLWyUIE7bg\",\n    \"title\": {\n      \"rendered\": \"string\",\n      \"protected\": false\n    },\n    \"author\": 2870,\n    \"comment_status\": \"string\",\n    \"ping_status\": \"string\",\n    \"template\": \"string\",\n    \"meta\": {},\n    \"alt_text\": \"string\",\n    \"caption\": {\n      \"rendered\": \"string\",\n      \"protected\": false\n    },\n    \"description\": {\n      \"rendered\": \"string\",\n      \"protected\": false\n    },\n    \"media_type\": \"image\",\n    \"mime_type\": \"string\",\n    \"media_details\": {},\n    \"post\": 963,\n    \"source_url\": \"https://PiDdrgguKSlSgtphp.cvcaJroyXzOy6OXVw+OpCsbDdCSApMxyTNiHiVSeaSsJddKALD9yAB9vcqn-lkq2c6\",\n    \"filename\": \"string\",\n    \"filesize\": 5037,\n    \"featured_media\": 5354,\n    \"class_list\": [\n      \"string\",\n      \"string\"\n    ],\n    \"aioseo_notices\": [\n      \"string\",\n      \"string\"\n    ],\n    \"_links\": {}\n  },\n  {\n    \"id\": 5895,\n    \"date\": \"1980-03-11T11:23:20.193Z\",\n    \"date_gmt\": \"1967-06-18T15:29:07.720Z\",\n    \"guid\": {\n      \"rendered\": \"string\",\n      \"protected\": false\n    },\n    \"modified\": \"1988-11-09T23:00:38.066Z\",\n    \"modified_gmt\": \"1981-11-16T18:05:05.864Z\",\n    \"slug\": \"string\",\n    \"status\": \"string\",\n    \"type\": \"string\",\n    \"link\": \"http://AmABUOcLO.flwmLDA-RMo5kXdLoq5HzUhhmguSkSd9c9uk2W,b4.CEZJ2zeGLTDcwSjc\",\n    \"title\": {\n      \"rendered\": \"string\",\n      \"protected\": false\n    },\n    \"author\": 4509,\n    \"comment_status\": \"string\",\n    \"ping_status\": \"string\",\n    \"template\": \"string\",\n    \"meta\": {},\n    \"alt_text\": \"string\",\n    \"caption\": {\n      \"rendered\": \"string\",\n      \"protected\": true\n    },\n    \"description\": {\n      \"rendered\": \"string\",\n      \"protected\": false\n    },\n    \"media_type\": \"image\",\n    \"mime_type\": \"string\",\n    \"media_details\": {},\n    \"post\": 8571,\n    \"source_url\": \"http://rRaSyVQ.jpgdvjw8EQy3L7aScrCBweQeHbyQS2AbB,\",\n    \"filename\": \"string\",\n    \"filesize\": 4258,\n    \"featured_media\": 7984,\n    \"class_list\": [\n      \"string\",\n      \"string\"\n    ],\n    \"aioseo_notices\": [\n      \"string\",\n      \"string\"\n    ],\n    \"_links\": {}\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7433696c-4ff6-4ccc-84fc-d37179c0875d",
+              "name": "Invalid parameter — code `rest_invalid_param`",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "media"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "per_page",
+                      "value": "10"
+                    },
+                    {
+                      "key": "search",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "before",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "modified_after",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "modified_before",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "exclude",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "include",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "include",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "<integer>"
+                    },
+                    {
+                      "key": "order",
+                      "value": "desc"
+                    },
+                    {
+                      "key": "slug",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "slug",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "media_type",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "mime_type",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"data\": {\n    \"status\": 3043,\n    \"params\": {\n      \"key_0\": \"string\"\n    },\n    \"details\": {\n      \"key_0\": {},\n      \"key_1\": {}\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "569b9a3a-66dd-4831-9280-706c9913ec97",
+          "name": "Get a single media attachment",
+          "request": {
+            "name": "Get a single media attachment",
+            "description": {
+              "content": "Retrieves one attachment by numeric ID, including `source_url`, `filesize`, `mime_type` and the generated size variants under `media_details`. Id 181 is the site logo (Centrexion_LOGO_275px.png).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "wp",
+                "v2",
+                "media",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "context",
+                  "value": "view",
+                  "description": "Scope under which the request is made; determines fields present in the response."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) Unique identifier for the object."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8acf4880-babb-46a8-8718-e672b9c115cb",
+              "name": "A media attachment",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "media",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Unique identifier for the object."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 6751,\n  \"date\": \"2004-05-12T19:38:38.593Z\",\n  \"date_gmt\": \"1963-03-04T06:48:46.093Z\",\n  \"guid\": {\n    \"rendered\": \"string\",\n    \"protected\": true\n  },\n  \"modified\": \"1994-06-24T12:41:57.936Z\",\n  \"modified_gmt\": \"1985-10-11T23:35:44.183Z\",\n  \"slug\": \"string\",\n  \"status\": \"string\",\n  \"type\": \"string\",\n  \"link\": \"http://IfoKSmypSCbutUVJ.epfwt5PtplOQDK0Q96CSbSjQ04Y,\",\n  \"title\": {\n    \"rendered\": \"string\",\n    \"protected\": true\n  },\n  \"author\": 6387,\n  \"comment_status\": \"string\",\n  \"ping_status\": \"string\",\n  \"template\": \"string\",\n  \"meta\": {},\n  \"alt_text\": \"string\",\n  \"caption\": {\n    \"rendered\": \"string\",\n    \"protected\": true\n  },\n  \"description\": {\n    \"rendered\": \"string\",\n    \"protected\": true\n  },\n  \"media_type\": \"file\",\n  \"mime_type\": \"string\",\n  \"media_details\": {},\n  \"post\": 1587,\n  \"source_url\": \"https://YlZCdKucQoxctgqtzOKxVLYe.pqa2mVVqAGUcUmg3mBaci8\",\n  \"filename\": \"string\",\n  \"filesize\": 5566,\n  \"featured_media\": 6412,\n  \"class_list\": [\n    \"string\",\n    \"string\"\n  ],\n  \"aioseo_notices\": [\n    \"string\",\n    \"string\"\n  ],\n  \"_links\": {}\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3810c184-d475-4076-88e4-0764a13e5afc",
+              "name": "Object not found — code `rest_post_invalid_id`",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "wp",
+                    "v2",
+                    "media",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "context",
+                      "value": "view"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) Unique identifier for the object."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": \"string\",\n  \"message\": \"string\",\n  \"data\": {\n    \"status\": 3043,\n    \"params\": {\n      \"key_0\": \"string\"\n    },\n    \"details\": {\n      \"key_0\": {},\n      \"key_1\": {}\n    }\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://centrexion.com/wp-json",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "d74a78c9-3846-4ce4-9fa5-e09109e87959",
+    "name": "Centrexion Therapeutics Content Media API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json. Centrexion is a late clinical-stage biopharmaceutical company in Boston, Massachusetts developing non-opioid, non-addictive therapies for chronic pain — led by CNTX-4975, a synthetic trans-capsaicin injected intra-articularly that reversibly deactivates TRPV1-expressing pain fibers — alongside an emerging immunology and inflammation portfolio. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-09. Write operations, `/wp/v2/settings`, `/wp/v2/menus`, `/wp/v2/menu-locations`, `/wp/v2/themes`, `/wp/v2/plugins`, `/wp/v2/block-types`, `/wp/v2/font-collections`, `/wp/v2/icons`, `/wp/v2/sidebars`, `/wp/v2/widget-types`, the pattern-directory routes, the `wp-abilities/v1` namespace and the whole plugin-administration surface all require authentication and are deliberately excluded — see x-api-evangelist-provenance.\n\nContact Support:\n Name: Centrexion Therapeutics\n Email: info@centrexion.com",
+      "type": "text/plain"
+    }
+  }
+}

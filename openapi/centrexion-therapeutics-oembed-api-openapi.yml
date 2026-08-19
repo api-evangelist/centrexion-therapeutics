@@ -1,0 +1,137 @@
+openapi: 3.2.0
+info:
+  title: Centrexion Therapeutics Content Oembed API
+  version: wp/v2
+  summary: Anonymously readable WordPress REST content API behind centrexion.com.
+  description: The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json. Centrexion is a late clinical-stage biopharmaceutical company in Boston, Massachusetts developing non-opioid, non-addictive therapies for chronic pain — led by CNTX-4975, a synthetic trans-capsaicin injected intra-articularly that reversibly deactivates TRPV1-expressing pain fibers — alongside an emerging immunology and inflammation portfolio. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-09. Write operations, `/wp/v2/settings`, `/wp/v2/menus`, `/wp/v2/menu-locations`, `/wp/v2/themes`, `/wp/v2/plugins`, `/wp/v2/block-types`, `/wp/v2/font-collections`, `/wp/v2/icons`, `/wp/v2/sidebars`, `/wp/v2/widget-types`, the pattern-directory routes, the `wp-abilities/v1` namespace and the whole plugin-administration surface all require authentication and are deliberately excluded — see x-api-evangelist-provenance.
+  contact:
+    name: Centrexion Therapeutics
+    url: https://centrexion.com/
+    email: info@centrexion.com
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route index at https://centrexion.com/wp-json/ (320 routes across 10 namespaces) and verified against live anonymous responses on 2026-08-09. Every parameter below appears verbatim in the route index `args` for that endpoint, and every collection count in a description was read from the `X-WP-Total` response header on that date. Centrexion publishes no OpenAPI, no developer documentation and no API reference for this surface; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines the wp/v2 contract. The 14 staff biographies the site publishes are a WordPress custom post type that is NOT registered for REST — it does not appear in /wp/v2/types and has no route — so it is reachable only as HTML and is not modelled here. The deployment is served by nginx on WP Engine, responses carry `x-robots-tag: noindex` and are edge-cached (`x-cacheable: SHORT`, `cache-control: max-age=600`). Nothing here was obtained with credentials.'
+servers:
+- url: https://centrexion.com/wp-json
+  description: Production content API
+tags:
+- name: oembed
+  description: oEmbed 1.0 provider endpoint for centrexion.com URLs.
+paths:
+  /oembed/1.0/embed:
+    get:
+      tags:
+      - oembed
+      operationId: getOembed
+      summary: Get an oEmbed response for a centrexion.com URL
+      description: The oEmbed 1.0 provider endpoint. Returns provider name, title, author, and an iframe embed for any URL on centrexion.com. A URL outside the site returns 404 `oembed_invalid_url`.
+      parameters:
+      - name: url
+        in: query
+        required: true
+        description: The URL of the resource for which to fetch oEmbed data.
+        schema:
+          type: string
+          format: uri
+          examples:
+          - https://centrexion.com/pipeline/
+      - name: format
+        in: query
+        description: The oEmbed format to use.
+        schema:
+          type: string
+          enum:
+          - json
+          - xml
+          default: json
+      - name: maxwidth
+        in: query
+        description: The maximum width of the embed frame in pixels.
+        schema:
+          type: integer
+          default: 600
+      responses:
+        '200':
+          description: An oEmbed 1.0 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Oembed'
+        '404':
+          $ref: '#/components/responses/OembedNotFound'
+components:
+  schemas:
+    Error:
+      type: object
+      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+              examples:
+              - 404
+            params:
+              type: object
+              description: Per-parameter messages, present on rest_invalid_param.
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              description: Per-parameter structured detail, present on rest_invalid_param.
+              additionalProperties:
+                type: object
+    Oembed:
+      type: object
+      description: An oEmbed 1.0 rich response.
+      properties:
+        version:
+          type: string
+          examples:
+          - '1.0'
+        provider_name:
+          type: string
+          examples:
+          - Centrexion Therapeutics
+        provider_url:
+          type: string
+          format: uri
+        author_name:
+          type: string
+        author_url:
+          type: string
+          format: uri
+        title:
+          type: string
+        type:
+          type: string
+          examples:
+          - rich
+        width:
+          type: integer
+        height:
+          type: integer
+        html:
+          type: string
+          description: The iframe embed markup.
+  responses:
+    OembedNotFound:
+      description: URL is not on this site — code `oembed_invalid_url`
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

@@ -1,0 +1,146 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Centrexion Therapeutics Content Media API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "media",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List media library attachments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/media",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "Limit response to posts published after a given ISO 8601 compliant date."
+              },
+              {
+                "name": "before",
+                "value": "",
+                "type": "query",
+                "description": "Limit response to posts published before a given ISO 8601 compliant date."
+              },
+              {
+                "name": "modified_after",
+                "value": "",
+                "type": "query",
+                "description": "Limit response to posts modified after a given ISO 8601 compliant date."
+              },
+              {
+                "name": "modified_before",
+                "value": "",
+                "type": "query",
+                "description": "Limit response to posts modified before a given ISO 8601 compliant date."
+              },
+              {
+                "name": "exclude",
+                "value": "",
+                "type": "query",
+                "description": "Ensure result set excludes specific IDs."
+              },
+              {
+                "name": "include",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to specific IDs."
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query",
+                "description": "Offset the result set by a specific number of items."
+              },
+              {
+                "name": "order",
+                "value": "",
+                "type": "query",
+                "description": "Order sort attribute ascending or descending."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to items with one or more specific slugs."
+              },
+              {
+                "name": "media_type",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to attachments of a particular media type."
+              },
+              {
+                "name": "mime_type",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to attachments of a particular MIME type."
+              }
+            ]
+          },
+          "docs": "Lists media attachments. This collection has a documented counting anomaly on this deployment: `X-WP-Total` consistently reports 43 and `X-WP-TotalPages` is computed from it, but the anonymous result set is always smaller than the requested page — observed 2026-08-09 as 0 items for `per_page=1`, 2 for `per_page=5`, 7 for `per_page=10` and 26 for `per_page=100`. Roughly 17 attachments are counted by the header but filtered out of the anonymous response, so `X-WP-Total` must not be trusted as the "
+        },
+        {
+          "info": {
+            "name": "Get a single media attachment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/media/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier for the object."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              }
+            ]
+          },
+          "docs": "Retrieves one attachment by numeric ID, including `source_url`, `filesize`, `mime_type` and the generated size variants under `media_details`. Id 181 is the site logo (Centrexion_LOGO_275px.png)."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

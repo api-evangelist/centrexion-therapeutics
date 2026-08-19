@@ -1,0 +1,147 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Centrexion Therapeutics Content Custom Types API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "custom-types",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List reusable blocks (patterns)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/blocks",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to items with one or more specific slugs."
+              }
+            ]
+          },
+          "docs": "Lists `wp_block` reusable pattern objects. Empty on this deployment."
+        },
+        {
+          "info": {
+            "name": "List theme Dynamic Templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/wpex_templates",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to items with one or more specific slugs."
+              }
+            ]
+          },
+          "docs": "Lists the theme's `wpex_templates` (Dynamic Templates) custom post type. Registered and anonymously reachable, but reports zero published items."
+        },
+        {
+          "info": {
+            "name": "List theme Custom Cards",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/wpex_card",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to items with one or more specific slugs."
+              }
+            ]
+          },
+          "docs": "Lists the theme's `wpex_card` (Custom Cards) custom post type. Registered and anonymously reachable, but reports zero published items."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

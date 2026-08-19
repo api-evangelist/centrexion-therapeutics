@@ -1,0 +1,249 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Centrexion Therapeutics Content Discovery API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get the REST API index",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              },
+              {
+                "name": "namespace",
+                "value": "",
+                "type": "query",
+                "description": "Restrict the response to a single namespace."
+              }
+            ]
+          },
+          "docs": "Returns the site index — name, description, URL, home, the registered namespaces, the authentication methods, the site logo and icon, and the full 320-entry route table."
+        },
+        {
+          "info": {
+            "name": "List navigation menu objects",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/navigation",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Current page of the collection."
+              },
+              {
+                "name": "per_page",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param."
+              },
+              {
+                "name": "search",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to those matching a string."
+              },
+              {
+                "name": "slug",
+                "value": "",
+                "type": "query",
+                "description": "Limit result set to items with one or more specific slugs."
+              }
+            ]
+          },
+          "docs": "Lists `wp_navigation` post objects. One published object exists on this deployment (id 4, slug `navigation`)."
+        },
+        {
+          "info": {
+            "name": "Get a single navigation object",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/navigation/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Unique identifier for the object."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              }
+            ]
+          },
+          "docs": "Retrieves one navigation object by numeric ID. Its `content.rendered` holds the serialized menu blocks."
+        },
+        {
+          "info": {
+            "name": "List registered post types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/types",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              }
+            ]
+          },
+          "docs": "Returns the registered post types visible to the caller. Anonymously this deployment returns 13: post, page, attachment, nav_menu_item, wp_block, wp_template, wp_template_part, wp_global_styles, wp_navigation, wp_font_family, wp_font_face, wpex_templates and wpex_card. The staff biography custom post type behind the Team page is absent — it is not REST-enabled."
+        },
+        {
+          "info": {
+            "name": "Get a single post type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/types/:type",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "An alphanumeric identifier for the post type."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              }
+            ]
+          },
+          "docs": "Retrieves the registration record for one post type."
+        },
+        {
+          "info": {
+            "name": "List registered taxonomies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/taxonomies",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to taxonomies associated with a specific post type."
+              }
+            ]
+          },
+          "docs": "Returns the registered taxonomies. Anonymously this deployment returns 5: category, post_tag, nav_menu, wp_pattern_category and post_series."
+        },
+        {
+          "info": {
+            "name": "Get a single taxonomy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/taxonomies/:taxonomy",
+            "params": [
+              {
+                "name": "taxonomy",
+                "value": "",
+                "type": "path",
+                "description": "An alphanumeric identifier for the taxonomy."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              }
+            ]
+          },
+          "docs": "Retrieves the registration record for one taxonomy."
+        },
+        {
+          "info": {
+            "name": "List post statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/statuses",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              }
+            ]
+          },
+          "docs": "Returns the post statuses visible to the caller. Anonymously this deployment returns only `publish`."
+        },
+        {
+          "info": {
+            "name": "Get a single post status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/wp/v2/statuses/:status",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "path",
+                "description": "An alphanumeric identifier for the status."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in the response."
+              }
+            ]
+          },
+          "docs": "Retrieves one post status. Anonymously only `publish` is readable; any other registered status returns 401 `rest_cannot_read_status`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,468 @@
+openapi: 3.2.0
+info:
+  title: Centrexion Therapeutics Content Discovery API
+  version: wp/v2
+  summary: Anonymously readable WordPress REST content API behind centrexion.com.
+  description: The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json. Centrexion is a late clinical-stage biopharmaceutical company in Boston, Massachusetts developing non-opioid, non-addictive therapies for chronic pain — led by CNTX-4975, a synthetic trans-capsaicin injected intra-articularly that reversibly deactivates TRPV1-expressing pain fibers — alongside an emerging immunology and inflammation portfolio. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-09. Write operations, `/wp/v2/settings`, `/wp/v2/menus`, `/wp/v2/menu-locations`, `/wp/v2/themes`, `/wp/v2/plugins`, `/wp/v2/block-types`, `/wp/v2/font-collections`, `/wp/v2/icons`, `/wp/v2/sidebars`, `/wp/v2/widget-types`, the pattern-directory routes, the `wp-abilities/v1` namespace and the whole plugin-administration surface all require authentication and are deliberately excluded — see x-api-evangelist-provenance.
+  contact:
+    name: Centrexion Therapeutics
+    url: https://centrexion.com/
+    email: info@centrexion.com
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route index at https://centrexion.com/wp-json/ (320 routes across 10 namespaces) and verified against live anonymous responses on 2026-08-09. Every parameter below appears verbatim in the route index `args` for that endpoint, and every collection count in a description was read from the `X-WP-Total` response header on that date. Centrexion publishes no OpenAPI, no developer documentation and no API reference for this surface; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines the wp/v2 contract. The 14 staff biographies the site publishes are a WordPress custom post type that is NOT registered for REST — it does not appear in /wp/v2/types and has no route — so it is reachable only as HTML and is not modelled here. The deployment is served by nginx on WP Engine, responses carry `x-robots-tag: noindex` and are edge-cached (`x-cacheable: SHORT`, `cache-control: max-age=600`). Nothing here was obtained with credentials.'
+servers:
+- url: https://centrexion.com/wp-json
+  description: Production content API
+tags:
+- name: discovery
+  description: Route, type, taxonomy and status discovery documents.
+paths:
+  /:
+    get:
+      tags:
+      - discovery
+      operationId: getApiIndex
+      summary: Get the REST API index
+      description: Returns the site index — name, description, URL, home, the registered namespaces, the authentication methods, the site logo and icon, and the full 320-entry route table.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - name: namespace
+        in: query
+        description: Restrict the response to a single namespace.
+        schema:
+          type: string
+          examples:
+          - wp/v2
+      responses:
+        '200':
+          description: Site index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiIndex'
+  /wp/v2/navigation:
+    get:
+      tags:
+      - discovery
+      operationId: listNavigation
+      summary: List navigation menu objects
+      description: Lists `wp_navigation` post objects. One published object exists on this deployment (id 4, slug `navigation`).
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/Search'
+      - $ref: '#/components/parameters/Slug'
+      responses:
+        '200':
+          description: A collection of navigation objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Navigation'
+  /wp/v2/navigation/{id}:
+    get:
+      tags:
+      - discovery
+      operationId: getNavigation
+      summary: Get a single navigation object
+      description: Retrieves one navigation object by numeric ID. Its `content.rendered` holds the serialized menu blocks.
+      parameters:
+      - $ref: '#/components/parameters/PathId'
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A navigation object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Navigation'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/types:
+    get:
+      tags:
+      - discovery
+      operationId: listPostTypes
+      summary: List registered post types
+      description: 'Returns the registered post types visible to the caller. Anonymously this deployment returns 13: post, page, attachment, nav_menu_item, wp_block, wp_template, wp_template_part, wp_global_styles, wp_navigation, wp_font_family, wp_font_face, wpex_templates and wpex_card. The staff biography custom post type behind the Team page is absent — it is not REST-enabled.'
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A map of post types keyed by type slug
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/PostType'
+  /wp/v2/types/{type}:
+    get:
+      tags:
+      - discovery
+      operationId: getPostType
+      summary: Get a single post type
+      description: Retrieves the registration record for one post type.
+      parameters:
+      - name: type
+        in: path
+        required: true
+        description: An alphanumeric identifier for the post type.
+        schema:
+          type: string
+          examples:
+          - page
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A post type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostType'
+        '404':
+          $ref: '#/components/responses/TypeNotFound'
+  /wp/v2/taxonomies:
+    get:
+      tags:
+      - discovery
+      operationId: listTaxonomies
+      summary: List registered taxonomies
+      description: 'Returns the registered taxonomies. Anonymously this deployment returns 5: category, post_tag, nav_menu, wp_pattern_category and post_series.'
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - name: type
+        in: query
+        description: Limit results to taxonomies associated with a specific post type.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A map of taxonomies keyed by taxonomy slug
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref: '#/components/schemas/Taxonomy'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      tags:
+      - discovery
+      operationId: getTaxonomy
+      summary: Get a single taxonomy
+      description: Retrieves the registration record for one taxonomy.
+      parameters:
+      - name: taxonomy
+        in: path
+        required: true
+        description: An alphanumeric identifier for the taxonomy.
+        schema:
+          type: string
+          examples:
+          - category
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A taxonomy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Taxonomy'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/statuses:
+    get:
+      tags:
+      - discovery
+      operationId: listStatuses
+      summary: List post statuses
+      description: Returns the post statuses visible to the caller. Anonymously this deployment returns only `publish`.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A map of post statuses
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /wp/v2/statuses/{status}:
+    get:
+      tags:
+      - discovery
+      operationId: getStatus
+      summary: Get a single post status
+      description: Retrieves one post status. Anonymously only `publish` is readable; any other registered status returns 401 `rest_cannot_read_status`.
+      parameters:
+      - name: status
+        in: path
+        required: true
+        description: An alphanumeric identifier for the status.
+        schema:
+          type: string
+          examples:
+          - publish
+      - $ref: '#/components/parameters/Context'
+      responses:
+        '200':
+          description: A post status
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    RenderedText:
+      type: object
+      description: WordPress rendered-text object.
+      properties:
+        rendered:
+          type: string
+          description: HTML for the object
+          transformed for display.: null
+        protected:
+          type: boolean
+          description: Whether the content is protected with a password.
+    Navigation:
+      type: object
+      description: A wp_navigation object holding the serialized site menu.
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+        slug:
+          type: string
+          examples:
+          - navigation
+        status:
+          type: string
+        type:
+          type: string
+          examples:
+          - wp_navigation
+        title:
+          $ref: '#/components/schemas/RenderedText'
+        content:
+          $ref: '#/components/schemas/RenderedText'
+        template:
+          type: string
+        _links:
+          type: object
+    Taxonomy:
+      type: object
+      description: A registered taxonomy.
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        types:
+          type: array
+          items:
+            type: string
+        hierarchical:
+          type: boolean
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        _links:
+          type: object
+    ApiIndex:
+      type: object
+      description: The REST API site index.
+      properties:
+        name:
+          type: string
+          examples:
+          - Centrexion Therapeutics
+        description:
+          type: string
+          examples:
+          - Solving unmet needs with a proven track record.
+        url:
+          type: string
+          format: uri
+        home:
+          type: string
+          format: uri
+        gmt_offset:
+          type: number
+          examples:
+          - -4
+        timezone_string:
+          type: string
+          examples:
+          - America/New_York
+        namespaces:
+          type: array
+          items:
+            type: string
+        authentication:
+          type: object
+          description: Registered authentication methods. This deployment advertises WordPress application passwords, with the authorization endpoint at /wp-admin/authorize-application.php.
+        routes:
+          type: object
+          description: The full route table keyed by route pattern.
+        site_logo:
+          type: integer
+          examples:
+          - 181
+        site_icon:
+          type: integer
+          examples:
+          - 189
+        site_icon_url:
+          type: string
+          format: uri
+        _links:
+          type: object
+    PostType:
+      type: object
+      description: A registered post type.
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        hierarchical:
+          type: boolean
+        has_archive:
+          anyOf:
+          - type: boolean
+          - type: string
+        icon:
+          anyOf:
+          - type: string
+          - type: 'null'
+        taxonomies:
+          type: array
+          items:
+            type: string
+        rest_base:
+          type: string
+        rest_namespace:
+          type: string
+        _links:
+          type: object
+    Error:
+      type: object
+      description: The WordPress REST error envelope. Not RFC 9457 problem+json.
+      required:
+      - code
+      - message
+      - data
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code.
+          examples:
+          - rest_post_invalid_id
+        message:
+          type: string
+          description: Human-readable error message.
+          examples:
+          - Invalid post ID.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: The HTTP status code.
+              examples:
+              - 404
+            params:
+              type: object
+              description: Per-parameter messages, present on rest_invalid_param.
+              additionalProperties:
+                type: string
+            details:
+              type: object
+              description: Per-parameter structured detail, present on rest_invalid_param.
+              additionalProperties:
+                type: object
+  parameters:
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the object.
+      schema:
+        type: integer
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Slug:
+      name: slug
+      in: query
+      description: Limit result set to items with one or more specific slugs.
+      schema:
+        type: array
+        items:
+          type: string
+  responses:
+    Unauthorized:
+      description: Authentication required for this resource or field
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TypeNotFound:
+      description: Invalid post type — code `rest_type_invalid`
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Object not found — code `rest_post_invalid_id`
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

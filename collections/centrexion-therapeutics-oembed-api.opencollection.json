@@ -1,0 +1,49 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Centrexion Therapeutics Content Oembed API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "oembed",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get an oEmbed response for a centrexion.com URL",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://centrexion.com/wp-json/oembed/1.0/embed",
+            "params": [
+              {
+                "name": "url",
+                "value": "",
+                "type": "query",
+                "description": "The URL of the resource for which to fetch oEmbed data."
+              },
+              {
+                "name": "format",
+                "value": "",
+                "type": "query",
+                "description": "The oEmbed format to use."
+              },
+              {
+                "name": "maxwidth",
+                "value": "",
+                "type": "query",
+                "description": "The maximum width of the embed frame in pixels."
+              }
+            ]
+          },
+          "docs": "The oEmbed 1.0 provider endpoint. Returns provider name, title, author, and an iframe embed for any URL on centrexion.com. A URL outside the site returns 404 `oembed_invalid_url`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

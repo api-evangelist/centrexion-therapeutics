@@ -1,0 +1,137 @@
+openapi: 3.2.0
+info:
+  title: Centrexion Therapeutics Content Search API
+  version: wp/v2
+  summary: Anonymously readable WordPress REST content API behind centrexion.com.
+  description: The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json. Centrexion is a late clinical-stage biopharmaceutical company in Boston, Massachusetts developing non-opioid, non-addictive therapies for chronic pain — led by CNTX-4975, a synthetic trans-capsaicin injected intra-articularly that reversibly deactivates TRPV1-expressing pain fibers — alongside an emerging immunology and inflammation portfolio. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-09. Write operations, `/wp/v2/settings`, `/wp/v2/menus`, `/wp/v2/menu-locations`, `/wp/v2/themes`, `/wp/v2/plugins`, `/wp/v2/block-types`, `/wp/v2/font-collections`, `/wp/v2/icons`, `/wp/v2/sidebars`, `/wp/v2/widget-types`, the pattern-directory routes, the `wp-abilities/v1` namespace and the whole plugin-administration surface all require authentication and are deliberately excluded — see x-api-evangelist-provenance.
+  contact:
+    name: Centrexion Therapeutics
+    url: https://centrexion.com/
+    email: info@centrexion.com
+  x-api-evangelist-provenance: 'Derived by the API Evangelist enrichment pipeline from the live WordPress REST route index at https://centrexion.com/wp-json/ (320 routes across 10 namespaces) and verified against live anonymous responses on 2026-08-09. Every parameter below appears verbatim in the route index `args` for that endpoint, and every collection count in a description was read from the `X-WP-Total` response header on that date. Centrexion publishes no OpenAPI, no developer documentation and no API reference for this surface; the humanURL in apis.yml points at the upstream WordPress REST handbook that defines the wp/v2 contract. The 14 staff biographies the site publishes are a WordPress custom post type that is NOT registered for REST — it does not appear in /wp/v2/types and has no route — so it is reachable only as HTML and is not modelled here. The deployment is served by nginx on WP Engine, responses carry `x-robots-tag: noindex` and are edge-cached (`x-cacheable: SHORT`, `cache-control: max-age=600`). Nothing here was obtained with credentials.'
+servers:
+- url: https://centrexion.com/wp-json
+  description: Production content API
+tags:
+- name: search
+  description: Cross-content search across published objects (7 searchable objects at harvest time).
+paths:
+  /wp/v2/search:
+    get:
+      tags:
+      - search
+      operationId: search
+      summary: Search across published content
+      description: Cross-content search returning lightweight hits (`id`, `title`, `url`, `type`, `subtype`). Seven objects are searchable on this deployment — the 6 pages plus the placeholder post.
+      parameters:
+      - $ref: '#/components/parameters/Context'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/Search'
+      - name: type
+        in: query
+        description: Limit results to items of an object type.
+        schema:
+          type: string
+          enum:
+          - post
+          - term
+          - post-format
+          default: post
+      - name: subtype
+        in: query
+        description: Limit results to items of one or more object subtypes.
+        schema:
+          type: array
+          items:
+            type: string
+          default:
+          - any
+      - name: exclude
+        in: query
+        description: Ensure result set excludes specific IDs.
+        schema:
+          type: array
+          items:
+            type: integer
+      - name: include
+        in: query
+        description: Limit result set to specific IDs.
+        schema:
+          type: array
+          items:
+            type: integer
+      responses:
+        '200':
+          description: Search results
+          headers:
+            X-WP-Total:
+              description: Total number of items in the collection.
+              schema:
+                type: integer
+                examples:
+                - 7
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchResult'
+components:
+  parameters:
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+  schemas:
+    SearchResult:
+      type: object
+      description: A lightweight cross-content search hit.
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        url:
+          type: string
+          format: uri
+        type:
+          type: string
+          examples:
+          - post
+        subtype:
+          type: string
+          examples:
+          - page
+        _links:
+          type: object
