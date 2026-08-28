@@ -16,6 +16,18 @@ description: >-
   or status page. The only machine-readable surface reachable without credentials is the WordPress
   REST content API behind centrexion.com, catalogued here, together with an llms.txt the site
   generates for AI crawlers.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://centrexion.com/wp-content/uploads/2025/08/Centrexion_LOGO_275px.png
 url: https://raw.githubusercontent.com/api-evangelist/centrexion-therapeutics/refs/heads/main/apis.yml
 x-type: company
