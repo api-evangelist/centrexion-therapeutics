@@ -28,6 +28,19 @@ deliveryModel:
   - pricing
   generated: '2026-08-28'
   method: derived
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source:
+  - authentication
+  - security
+  generated: '2026-09-03'
+  method: derived
 image: https://centrexion.com/wp-content/uploads/2025/08/Centrexion_LOGO_275px.png
 url: https://raw.githubusercontent.com/api-evangelist/centrexion-therapeutics/refs/heads/main/apis.yml
 x-type: company
