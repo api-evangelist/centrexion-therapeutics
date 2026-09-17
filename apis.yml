@@ -156,26 +156,6 @@ apis:
     url: conventions/centrexion-therapeutics-conventions.yml
   - type: DataModel
     url: data-model/centrexion-therapeutics-data-model.yml
-- aid: centrexion-therapeutics:centrexion-therapeutics-oembed-api
-  name: Centrexion Therapeutics Oembed API
-  description: oEmbed 1.0 provider endpoint for centrexion.com URLs.
-  humanURL: https://developer.wordpress.org/rest-api/
-  baseURL: https://centrexion.com/wp-json
-  tags:
-  - oEmbed
-  tags_raw:
-  - oembed
-  properties:
-  - type: OpenAPI
-    url: openapi/centrexion-therapeutics-oembed-api-openapi.yml
-  - type: Authentication
-    url: authentication/centrexion-therapeutics-authentication.yml
-  - type: ErrorCatalog
-    url: errors/centrexion-therapeutics-problem-types.yml
-  - type: Conventions
-    url: conventions/centrexion-therapeutics-conventions.yml
-  - type: DataModel
-    url: data-model/centrexion-therapeutics-data-model.yml
 - aid: centrexion-therapeutics:centrexion-therapeutics-pages-api
   name: Centrexion Therapeutics Pages API
   description: >-
@@ -277,6 +257,24 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/centrexion-therapeutics-taxonomy-api-openapi.yml
+  - type: Authentication
+    url: authentication/centrexion-therapeutics-authentication.yml
+  - type: ErrorCatalog
+    url: errors/centrexion-therapeutics-problem-types.yml
+  - type: Conventions
+    url: conventions/centrexion-therapeutics-conventions.yml
+  - type: DataModel
+    url: data-model/centrexion-therapeutics-data-model.yml
+- aid: centrexion-therapeutics:centrexion-therapeutics-o-embed-api
+  name: Centrexion Therapeutics o Embed API
+  description: oEmbed 1.0 provider endpoint for centrexion.com URLs.
+  humanURL: https://developer.wordpress.org/rest-api/
+  baseURL: https://centrexion.com/wp-json
+  tags:
+  - o Embed
+  properties:
+  - type: OpenAPI
+    url: openapi/centrexion-therapeutics-o-embed-api-openapi.yml
   - type: Authentication
     url: authentication/centrexion-therapeutics-authentication.yml
   - type: ErrorCatalog
