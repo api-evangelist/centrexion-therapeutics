@@ -3,7 +3,7 @@ info:
   title: Centrexion Therapeutics Content Oembed API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind centrexion.com.
-  description: The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json. Centrexion is a late clinical-stage biopharmaceutical company in Boston, Massachusetts developing non-opioid, non-addictive therapies for chronic pain — led by CNTX-4975, a synthetic trans-capsaicin injected intra-articularly that reversibly deactivates TRPV1-expressing pain fibers — alongside an emerging immunology and inflammation portfolio. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-09. Write operations, `/wp/v2/settings`, `/wp/v2/menus`, `/wp/v2/menu-locations`, `/wp/v2/themes`, `/wp/v2/plugins`, `/wp/v2/block-types`, `/wp/v2/font-collections`, `/wp/v2/icons`, `/wp/v2/sidebars`, `/wp/v2/widget-types`, the pattern-directory routes, the `wp-abilities/v1` namespace and the whole plugin-administration surface all require authentication and are deliberately excluded — see x-api-evangelist-provenance.
+  description: The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json.
   contact:
     name: Centrexion Therapeutics
     url: https://centrexion.com/
@@ -13,13 +13,13 @@ servers:
 - url: https://centrexion.com/wp-json
   description: Production content API
 tags:
-- name: oembed
+- name: o Embed
   description: oEmbed 1.0 provider endpoint for centrexion.com URLs.
 paths:
   /oembed/1.0/embed:
     get:
       tags:
-      - oembed
+      - o Embed
       operationId: getOembed
       summary: Get an oEmbed response for a centrexion.com URL
       description: The oEmbed 1.0 provider endpoint. Returns provider name, title, author, and an iframe embed for any URL on centrexion.com. A URL outside the site returns 404 `oembed_invalid_url`.
@@ -59,6 +59,39 @@ paths:
           $ref: '#/components/responses/OembedNotFound'
 components:
   schemas:
+    Oembed:
+      type: object
+      description: An oEmbed 1.0 rich response.
+      properties:
+        version:
+          type: string
+          examples:
+          - '1.0'
+        provider_name:
+          type: string
+          examples:
+          - Centrexion Therapeutics
+        provider_url:
+          type: string
+          format: uri
+        author_name:
+          type: string
+        author_url:
+          type: string
+          format: uri
+        title:
+          type: string
+        type:
+          type: string
+          examples:
+          - rich
+        width:
+          type: integer
+        height:
+          type: integer
+        html:
+          type: string
+          description: The iframe embed markup.
     Error:
       type: object
       description: The WordPress REST error envelope. Not RFC 9457 problem+json.
@@ -95,39 +128,6 @@ components:
               description: Per-parameter structured detail, present on rest_invalid_param.
               additionalProperties:
                 type: object
-    Oembed:
-      type: object
-      description: An oEmbed 1.0 rich response.
-      properties:
-        version:
-          type: string
-          examples:
-          - '1.0'
-        provider_name:
-          type: string
-          examples:
-          - Centrexion Therapeutics
-        provider_url:
-          type: string
-          format: uri
-        author_name:
-          type: string
-        author_url:
-          type: string
-          format: uri
-        title:
-          type: string
-        type:
-          type: string
-          examples:
-          - rich
-        width:
-          type: integer
-        height:
-          type: integer
-        html:
-          type: string
-          description: The iframe embed markup.
   responses:
     OembedNotFound:
       description: URL is not on this site — code `oembed_invalid_url`

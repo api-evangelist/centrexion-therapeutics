@@ -3,7 +3,7 @@ info:
   title: Centrexion Therapeutics Content Taxonomy API
   version: wp/v2
   summary: Anonymously readable WordPress REST content API behind centrexion.com.
-  description: The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json. Centrexion is a late clinical-stage biopharmaceutical company in Boston, Massachusetts developing non-opioid, non-addictive therapies for chronic pain — led by CNTX-4975, a synthetic trans-capsaicin injected intra-articularly that reversibly deactivates TRPV1-expressing pain fibers — alongside an emerging immunology and inflammation portfolio. It runs no developer program and markets no product API. This document is an API Evangelist derivation of the WordPress `wp/v2` and `oembed/1.0` route index the site publishes at /wp-json/, restricted to the operations that were verified to return data anonymously on 2026-08-09. Write operations, `/wp/v2/settings`, `/wp/v2/menus`, `/wp/v2/menu-locations`, `/wp/v2/themes`, `/wp/v2/plugins`, `/wp/v2/block-types`, `/wp/v2/font-collections`, `/wp/v2/icons`, `/wp/v2/sidebars`, `/wp/v2/widget-types`, the pattern-directory routes, the `wp-abilities/v1` namespace and the whole plugin-administration surface all require authentication and are deliberately excluded — see x-api-evangelist-provenance.
+  description: The read-only content surface Centrexion Therapeutics exposes at https://centrexion.com/wp-json.
   contact:
     name: Centrexion Therapeutics
     url: https://centrexion.com/
@@ -13,13 +13,13 @@ servers:
 - url: https://centrexion.com/wp-json
   description: Production content API
 tags:
-- name: taxonomy
+- name: Taxonomy
   description: Categories, tags and the post_series taxonomy. Only the default `Uncategorized` category exists; `post_tag` and `post_series` are registered but empty.
 paths:
   /wp/v2/categories:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: listCategories
       summary: List categories
       description: Lists category terms. Only the default `Uncategorized` term (id 1, count 1) exists on this deployment.
@@ -84,7 +84,7 @@ paths:
   /wp/v2/categories/{id}:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: getCategory
       summary: Get a single category
       description: Retrieves one category term by numeric ID.
@@ -103,7 +103,7 @@ paths:
   /wp/v2/tags:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: listTags
       summary: List tags
       description: 'Lists `post_tag` terms. The taxonomy is registered but empty on this deployment — the collection returns an empty array with `X-WP-Total: 0`.'
@@ -146,7 +146,7 @@ paths:
   /wp/v2/post_series:
     get:
       tags:
-      - taxonomy
+      - Taxonomy
       operationId: listPostSeries
       summary: List post_series terms
       description: Lists terms in the `post_series` taxonomy registered against posts by a site plugin. Registered but empty on this deployment.
@@ -167,39 +167,83 @@ paths:
                 items:
                   $ref: '#/components/schemas/Term'
 components:
+  parameters:
+    Exclude:
+      name: exclude
+      in: query
+      description: Ensure result set excludes specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    TermSlug:
+      name: slug
+      in: query
+      description: Limit result set to terms or users with one or more specific slugs.
+      schema:
+        type: array
+        items:
+          type: string
+    Include:
+      name: include
+      in: query
+      description: Limit result set to specific IDs.
+      schema:
+        type: array
+        items:
+          type: integer
+    Page:
+      name: page
+      in: query
+      description: Current page of the collection.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Context:
+      name: context
+      in: query
+      description: Scope under which the request is made; determines fields present in the response.
+      schema:
+        type: string
+        enum:
+        - view
+        - embed
+        - edit
+        default: view
+    Search:
+      name: search
+      in: query
+      description: Limit results to those matching a string.
+      schema:
+        type: string
+    PathId:
+      name: id
+      in: path
+      required: true
+      description: Unique identifier for the object.
+      schema:
+        type: integer
+    PerPage:
+      name: per_page
+      in: query
+      description: Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    Order:
+      name: order
+      in: query
+      description: Order sort attribute ascending or descending.
+      schema:
+        type: string
+        enum:
+        - asc
+        - desc
+        default: desc
   schemas:
-    Term:
-      type: object
-      description: A taxonomy term (category, tag or post_series).
-      properties:
-        id:
-          type: integer
-        count:
-          type: integer
-          description: Number of published posts assigned to the term.
-        description:
-          type: string
-        link:
-          type: string
-          format: uri
-        name:
-          type: string
-          examples:
-          - Uncategorized
-        slug:
-          type: string
-          examples:
-          - uncategorized
-        taxonomy:
-          type: string
-          examples:
-          - category
-        parent:
-          type: integer
-        meta:
-          type: object
-        _links:
-          type: object
     Error:
       type: object
       description: The WordPress REST error envelope. Not RFC 9457 problem+json.
@@ -236,82 +280,38 @@ components:
               description: Per-parameter structured detail, present on rest_invalid_param.
               additionalProperties:
                 type: object
-  parameters:
-    PerPage:
-      name: per_page
-      in: query
-      description: Maximum number of items to be returned in the result set. Values above 100 return 400 rest_invalid_param.
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 10
-    Context:
-      name: context
-      in: query
-      description: Scope under which the request is made; determines fields present in the response.
-      schema:
-        type: string
-        enum:
-        - view
-        - embed
-        - edit
-        default: view
-    TermSlug:
-      name: slug
-      in: query
-      description: Limit result set to terms or users with one or more specific slugs.
-      schema:
-        type: array
-        items:
+    Term:
+      type: object
+      description: A taxonomy term (category, tag or post_series).
+      properties:
+        id:
+          type: integer
+        count:
+          type: integer
+          description: Number of published posts assigned to the term.
+        description:
           type: string
-    Search:
-      name: search
-      in: query
-      description: Limit results to those matching a string.
-      schema:
-        type: string
-    Exclude:
-      name: exclude
-      in: query
-      description: Ensure result set excludes specific IDs.
-      schema:
-        type: array
-        items:
+        link:
+          type: string
+          format: uri
+        name:
+          type: string
+          examples:
+          - Uncategorized
+        slug:
+          type: string
+          examples:
+          - uncategorized
+        taxonomy:
+          type: string
+          examples:
+          - category
+        parent:
           type: integer
-    Order:
-      name: order
-      in: query
-      description: Order sort attribute ascending or descending.
-      schema:
-        type: string
-        enum:
-        - asc
-        - desc
-        default: desc
-    PathId:
-      name: id
-      in: path
-      required: true
-      description: Unique identifier for the object.
-      schema:
-        type: integer
-    Page:
-      name: page
-      in: query
-      description: Current page of the collection.
-      schema:
-        type: integer
-        minimum: 1
-        default: 1
-    Include:
-      name: include
-      in: query
-      description: Limit result set to specific IDs.
-      schema:
-        type: array
-        items:
-          type: integer
+        meta:
+          type: object
+        _links:
+          type: object
   responses:
     BadRequest:
       description: Invalid parameter — code `rest_invalid_param`

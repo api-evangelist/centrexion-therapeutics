@@ -1,16 +1,7 @@
 {
   "provider": "centrexion-therapeutics",
   "sources": [
-    "centrexion-therapeutics-comments-api-openapi.yml",
-    "centrexion-therapeutics-custom-types-api-openapi.yml",
-    "centrexion-therapeutics-discovery-api-openapi.yml",
-    "centrexion-therapeutics-media-api-openapi.yml",
-    "centrexion-therapeutics-oembed-api-openapi.yml",
-    "centrexion-therapeutics-pages-api-openapi.yml",
-    "centrexion-therapeutics-people-api-openapi.yml",
-    "centrexion-therapeutics-posts-api-openapi.yml",
-    "centrexion-therapeutics-search-api-openapi.yml",
-    "centrexion-therapeutics-taxonomy-api-openapi.yml"
+    "_original/centrexion-therapeutics-content-openapi.yml"
   ],
   "outputs": [
     "centrexion-therapeutics-comments-api-openapi.yml",
@@ -24,21 +15,27 @@
     "centrexion-therapeutics-search-api-openapi.yml",
     "centrexion-therapeutics-taxonomy-api-openapi.yml"
   ],
-  "archived": [],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation"
+  ],
   "errors": [],
   "warnings": [],
   "notes": [
-    "centrexion-therapeutics-comments-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "centrexion-therapeutics-custom-types-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "centrexion-therapeutics-discovery-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "centrexion-therapeutics-media-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "centrexion-therapeutics-oembed-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "centrexion-therapeutics-pages-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "centrexion-therapeutics-people-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "centrexion-therapeutics-posts-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "centrexion-therapeutics-search-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "centrexion-therapeutics-taxonomy-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "centrexion-therapeutics-content-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "superseded outputs removed: centrexion-therapeutics-o-embed-api-openapi.yml",
+    "apis.yml register: written (+1 apis, 10 total)"
   ],
-  "skipped": []
+  "skipped": [
+    "centrexion-therapeutics-comments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "centrexion-therapeutics-custom-types-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "centrexion-therapeutics-discovery-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "centrexion-therapeutics-media-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "centrexion-therapeutics-o-embed-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "centrexion-therapeutics-pages-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "centrexion-therapeutics-people-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "centrexion-therapeutics-posts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "centrexion-therapeutics-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "centrexion-therapeutics-taxonomy-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
